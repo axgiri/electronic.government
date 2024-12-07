@@ -29,7 +29,7 @@ public class UserCompanyService {
         return invitationDTO.getCode();
     }
 
-    public UserDTO addUserToCompanyByLink(String code, UserDTO userDTO){ //todo we should get userDTO.getId() from token
+    public UserDTO addUserToCompanyByLink(String code, UserDTO userDTO){ //TODO: we should get userDTO.getId() from token
         logger.info("adding user to company with data: {}", userDTO);
         Boolean isValidCode = invitationService.validate(code);
         if (isValidCode == false) {
@@ -47,5 +47,3 @@ public class UserCompanyService {
     //TODO:
     //userService.validate() token cache for 12h
     //companyService.isActive() check status cache for 6h
-    //do command select where company active is true, check localTime > expiration change active to false
-    //do command to close tokens that not active by time

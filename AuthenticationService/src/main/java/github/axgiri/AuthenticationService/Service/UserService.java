@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import github.axgiri.AuthenticationService.DTO.UserDTO;
+import github.axgiri.AuthenticationService.Enum.RoleEnum;
 import github.axgiri.AuthenticationService.Model.Company;
 import github.axgiri.AuthenticationService.Model.User;
 import github.axgiri.AuthenticationService.Repository.UserRepository;
@@ -77,6 +78,13 @@ public class UserService {
         repository.save(user);
     }
 
+    public void setRole(Long id, RoleEnum role){
+        logger.info("setting role for user with id: {}", id);
+        User user = repository.findById(id)
+            .orElseThrow(() -> new RuntimeException("user with id " + id + " not found"));
+        user.setRole(role);
+        repository.save(user);
+    }
+
     // TODO: public void validate(UserDTO userDTO){}
-    //TODO: setRole
 }
