@@ -29,7 +29,7 @@ public class CompanyService {
         logger.info("fetching all companies");
         List<Company> companies = repository.findAll();
         return companies.stream()
-            .map(CompanyDTO::ftomEntityToDTO)
+            .map(CompanyDTO::fromEntityToDTO)
             .collect(Collectors.toList());
     }
 
@@ -37,14 +37,14 @@ public class CompanyService {
         logger.info("fetching company with id: {}", id );
         Company company = repository.findById(id)
             .orElseThrow(() -> new RuntimeException("comopany with id: " + id + " not found"));
-        return CompanyDTO.ftomEntityToDTO(company);
+        return CompanyDTO.fromEntityToDTO(company);
     }
 
     public CompanyDTO add(CompanyDTO companyDTO){
         logger.info("creating company with data: {}", companyDTO);
         Company company = companyDTO.toEntity();
         repository.save(company);
-        return CompanyDTO.ftomEntityToDTO(company);
+        return CompanyDTO.fromEntityToDTO(company);
     }
 
     public void delete(Long id){

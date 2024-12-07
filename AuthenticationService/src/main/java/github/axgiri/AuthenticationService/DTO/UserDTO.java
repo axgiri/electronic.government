@@ -29,7 +29,6 @@ public class UserDTO {
     @NotNull(message = "surname is required")
     private String surname;
 
-    @NotNull(message = "role is required")
     private RoleEnum role;
 
     private Long companyId;

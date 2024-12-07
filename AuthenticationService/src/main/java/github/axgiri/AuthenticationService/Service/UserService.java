@@ -52,7 +52,7 @@ public class UserService {
     public UserDTO update(UserDTO userDTO, Long id) {
         logger.info("updating user: {}", userDTO);
         User user = repository.findById(id)
-            .orElseThrow(() -> new RuntimeException("User with id: " + id + " not found"));
+            .orElseThrow(() -> new RuntimeException("user with id: " + id + " not found"));
         user.setEmail(userDTO.getEmail());
         user.setPassword(userDTO.getPassword());
         user.setName(userDTO.getName());
@@ -68,5 +68,15 @@ public class UserService {
         repository.delete(user);
     }
 
+    public void deleteCompanyId(Long id){
+        logger.info("deleting company from user with id: {}", id);
+        User user = repository.findById(id)
+            .orElseThrow(() -> new RuntimeException("user with id " + id + " not found"));
+        user.setCompany(null);
+        user.setRole(null);
+        repository.save(user);
+    }
+
     // TODO: public void validate(UserDTO userDTO){}
+    //TODO: setRole
 }

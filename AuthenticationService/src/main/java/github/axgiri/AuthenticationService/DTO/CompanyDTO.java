@@ -23,7 +23,7 @@ public class CompanyDTO {
 
     private PlanEnum plan;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate subscriptionExpiration;
 
     private boolean active;
@@ -38,7 +38,7 @@ public class CompanyDTO {
         return company;
     }
 
-    public static CompanyDTO ftomEntityToDTO(Company company){
+    public static CompanyDTO fromEntityToDTO(Company company){
         return new CompanyDTO(
             company.getId(),
             company.getName(),
