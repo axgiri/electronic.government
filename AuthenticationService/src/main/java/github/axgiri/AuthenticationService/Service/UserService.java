@@ -5,13 +5,19 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import github.axgiri.AuthenticationService.DTO.LoginRequest;
 import github.axgiri.AuthenticationService.DTO.UserDTO;
 import github.axgiri.AuthenticationService.Enum.RoleEnum;
 import github.axgiri.AuthenticationService.Model.Company;
 import github.axgiri.AuthenticationService.Model.User;
 import github.axgiri.AuthenticationService.Repository.UserRepository;
+import github.axgiri.AuthenticationService.Security.AuthResponse;
+import github.axgiri.AuthenticationService.Security.TokenService;
 
 @Service
 public class UserService {
@@ -19,10 +25,16 @@ public class UserService {
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
     private final UserRepository repository;
     private final CompanyService companyService;
+    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final TokenService tokenService;
 
-    public UserService(UserRepository repository, CompanyService companyService) {
+    public UserService(UserRepository repository, CompanyService companyService, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, TokenService tokenService) {
         this.repository = repository;
         this.companyService = companyService;
+        this.passwordEncoder = passwordEncoder;
+        this.authenticationManager = authenticationManager;
+        this.tokenService = tokenService;
     }
 
     public List<UserDTO> getByCompanyId(Long id){
@@ -40,14 +52,25 @@ public class UserService {
         return UserDTO.fromEntityToDTO(user);
     }
 
-    public UserDTO add(UserDTO userDTO){
-        logger.info("adding user: {}", userDTO);
+    public AuthResponse authenticate(LoginRequest request) {
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+        var user = repository.findByEmail(request.getEmail())
+            .orElseThrow(() -> new RuntimeException("User with email: " + request.getEmail() + " not found"));
+        String token = tokenService.generateToken(user);
+        return new AuthResponse(token, UserDTO.fromEntityToDTO(user));
+    }
+
+    public AuthResponse add(UserDTO userDTO) {
+        logger.info("adding new user: {}", userDTO);
         Company company = null;
-        if(userDTO.getCompanyId() != null){
+        if (userDTO.getCompanyId() != null) {
             company = companyService.getById(userDTO.getCompanyId()).toEntity();
         }
         User user = userDTO.toEntity(company);
-        return UserDTO.fromEntityToDTO(repository.save(user));
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        repository.save(user);
+        String token = tokenService.generateToken(user);
+        return new AuthResponse(token, UserDTO.fromEntityToDTO(user));
     }
 
     public UserDTO update(UserDTO userDTO, Long id) {
@@ -86,5 +109,16 @@ public class UserService {
         repository.save(user);
     }
 
-    // TODO: public void validate(UserDTO userDTO){}
+    public void validateToken(String token) {
+        if (!tokenService.isTokenValid(token, repository.findByEmail(tokenService.extractUsername(token)).orElseThrow())) {
+            throw new RuntimeException("token is invalid");
+        }
+    }
+
+    public UserDTO getByEmail(String email){
+        logger.info("fetching user by email: {}", email);
+        User user = repository.findByEmail(email)
+            .orElseThrow(() -> new RuntimeException("user with email " + email + "not found"));
+        return UserDTO.fromEntityToDTO(user);
+    }
 }

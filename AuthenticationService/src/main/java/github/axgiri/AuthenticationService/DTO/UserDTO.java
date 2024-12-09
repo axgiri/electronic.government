@@ -40,7 +40,7 @@ public class UserDTO {
         user.setPassword(password);
         user.setName(name);
         user.setSurname(surname);
-        user.setRole(role);
+        user.setRole(role != null ? role : RoleEnum.WORKER);
         user.setCompany(company != null ? company : null);
         return user;
     }
