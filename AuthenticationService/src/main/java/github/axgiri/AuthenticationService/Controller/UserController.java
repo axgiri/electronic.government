@@ -5,6 +5,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,6 +33,7 @@ public class UserController {
         this.service = service;
     }
 
+    @PreAuthorize("@middleware.isCompanyAdmin(principal.username, #id)")
     @GetMapping("/getByCompanyId/{id}")
     public ResponseEntity<List<UserDTO>> getByCompanyId(@PathVariable Long id){
         logger.info("fetching all user with company id: {}", id);
@@ -56,12 +58,14 @@ public class UserController {
         return ResponseEntity.ok(authResponse);
     }
 
+    @PreAuthorize("@middleware.isSameUser(principal.username, #id)")
     @PutMapping("/update/{id}")
     public ResponseEntity<UserDTO> update(@RequestBody UserDTO userDTO, @PathVariable Long id){
         logger.info("updating user: {}", userDTO);
         return ResponseEntity.ok(service.update(userDTO, id));
     }
 
+    @PreAuthorize("@middleware.isSameUser(principal.username, #id)")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id){
         logger.info("deleting user with id: {}", id);
@@ -69,6 +73,7 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    @PreAuthorize("@middleware.isUserOrCompanyModerator(principal.username, #id)")
     @PutMapping("/{id}")
     public ResponseEntity<Void> outFromCompany(@PathVariable Long id){
         logger.info("deleting company from user with id: {}", id);
@@ -76,6 +81,7 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    @PreAuthorize("@middleware.isCompanyModeratorForUser(principal.username, #id)")
     @PostMapping("/setRole/{id}")
     public ResponseEntity<Void> setRole(@PathVariable Long id, @RequestBody RoleEnum role){
         logger.info("setting role for user with id: {}", id);

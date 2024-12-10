@@ -75,5 +75,4 @@ public class CompanyService {
         company.setActive(true);
         repository.save(company);
     }
-
 }

@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -64,8 +65,8 @@ public class TokenService {
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails){
         logger.info("generating token for user: {}", userDetails.getUsername());
         extraClaims.put("roles", userDetails.getAuthorities().stream()
-        .map(authority -> authority.getAuthority().replace("ROLE_", ""))
-        .collect(Collectors.toList()));
+            .map(GrantedAuthority::getAuthority)
+            .collect(Collectors.toList()));
 
         return Jwts
          .builder()

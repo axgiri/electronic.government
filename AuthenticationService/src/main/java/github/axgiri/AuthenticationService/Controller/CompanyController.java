@@ -5,6 +5,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,6 +38,7 @@ public class CompanyController {
         return ResponseEntity.ok(companies);
     }
 
+    @PreAuthorize("@middleware.isCompanyMember(principal.username, #id)")
     @GetMapping("/{id}")
     public ResponseEntity<CompanyDTO> getById(@PathVariable Long id){
         logger.info("fetching company with id: {}", id);
@@ -49,6 +51,7 @@ public class CompanyController {
         return ResponseEntity.ok(service.add(companyDTO));
     }
 
+    @PreAuthorize("@middleware.isCompanyAdmin(principal.username, #id)")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id){
         logger.info("deleting company with id: {}", id);
@@ -56,12 +59,14 @@ public class CompanyController {
         return ResponseEntity.ok().build();
     }
 
+    @PreAuthorize("@middleware.isCompanyMember(principal.username, #id)")
     @GetMapping("/subscriptions/isActive/{id}")
     public ResponseEntity<Boolean> isActive(@PathVariable Long id){
         logger.info("is avtive: {}", id);
         return ResponseEntity.ok(service.isActive(id));
     }
 
+    @PreAuthorize("@middleware.isCompanyAdmin(principal.username, #id)")
     @PostMapping("/subscriptions/buy/{id}")
     public ResponseEntity<Void> buy(@PathVariable Long id, @RequestParam PlanEnum plan){
         logger.info("buying plan for: {}", id);
