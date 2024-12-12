@@ -73,7 +73,7 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @PreAuthorize("@middleware.isUserOrCompanyModerator(principal.username, #id)")
+    @PreAuthorize("@middleware.isSameUser(principal.username, #id) || @middleware.isCompanyModeratorForUser(principal.username, #id)")
     @PutMapping("/{id}")
     public ResponseEntity<Void> outFromCompany(@PathVariable Long id){
         logger.info("deleting company from user with id: {}", id);
