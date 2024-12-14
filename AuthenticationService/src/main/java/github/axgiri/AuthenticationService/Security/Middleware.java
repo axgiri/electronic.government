@@ -1,5 +1,6 @@
 package github.axgiri.AuthenticationService.Security;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +30,7 @@ public class Middleware {
         return userDTO.getCompanyId().equals(companyId) && userDTO.getRole() == RoleEnum.ADMIN;
     }
 
+    @Cacheable(value = "fourHoursCache", key="'is_' + #username + '_BelongsToCompany_' + #companyId")
     public boolean isCompanyMember(String username, Long companyId) {
         UserDTO userDTO = userService.getByEmail(username);
         if (userDTO.getCompanyId() == null) {
@@ -36,7 +38,7 @@ public class Middleware {
         }
         return userDTO.getCompanyId().equals(companyId);
     }
-
+    
     public boolean isSameUser(String username, Long userId) {
         UserDTO userDTO = userService.getByEmail(username);
         return userDTO.getId().equals(userId);
@@ -71,5 +73,4 @@ public class Middleware {
         }
         return currentUser.getRole() == RoleEnum.MODERATOR || currentUser.getRole() == RoleEnum.ADMIN;
     }
-    
 }

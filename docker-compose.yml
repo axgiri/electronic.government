@@ -134,16 +134,16 @@ services:
     networks:
       - microservices-network
   
-  # purchase-redis:
-  #   image: redis:6.2.6-alpine
-  #   container_name: purchase-redis
-  #   ports:
-  #     - "6379:6379"
-  #   command: redis-server --appendonly yes
-  #   volumes:
-  #     - ./purchase-service/src/main/resources/redis-data:/data
-  #   networks:
-  #     - microservices-network
+  auth_redis:
+    image: redis:6.2.6-alpine
+    container_name: auth_redis
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - ./AuthenticationService/src/main/resources/redis-data:/data
+    networks:
+      - microservices-network
 
   # zookeeper:
   #   image: confluentinc/cp-zookeeper:7.7.1

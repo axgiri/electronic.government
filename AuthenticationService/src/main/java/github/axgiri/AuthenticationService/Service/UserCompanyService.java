@@ -2,6 +2,7 @@ package github.axgiri.AuthenticationService.Service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import github.axgiri.AuthenticationService.DTO.CompanyDTO;
@@ -48,6 +49,7 @@ public class UserCompanyService {
         return userDTO;
     }
 
+    @Cacheable(value = "isCompanyAndTokenValid", key="'isToken_' + #token + '_AndCompany_' + #companyId + '_Valid'")
     public Boolean validate(String token, Long companyId){
         userService.validateToken(token);
         if (companyService.isActive(companyId) == true){

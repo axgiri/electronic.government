@@ -5,6 +5,8 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -37,6 +39,7 @@ public class UserService {
         this.tokenService = tokenService;
     }
 
+    @Cacheable(value = "companyMembers", key = "'company_' + #id + '_Members'")
     public List<UserDTO> getByCompanyId(Long id){
         logger.info("fetching users by company id: {}", id);
         return repository.findByCompanyId(id)
@@ -45,6 +48,7 @@ public class UserService {
             .collect(Collectors.toList());
     }
 
+    @Cacheable(value = "fourHoursCache", key="'userWithId_' + #id")
     public UserDTO getById(Long id){
         logger.info("fetching user by id: {}", id);
         User user = repository.findById(id)
@@ -73,6 +77,7 @@ public class UserService {
         return new AuthResponse(token, UserDTO.fromEntityToDTO(user));
     }
 
+    @CacheEvict(value = "fourHoursCache", key="'userWithId_' + #id")
     public UserDTO update(UserDTO userDTO, Long id) {
         logger.info("updating user: {}", userDTO);
         User user = repository.findById(id)
@@ -85,6 +90,7 @@ public class UserService {
         return UserDTO.fromEntityToDTO(repository.save(user));
     }    
 
+    @CacheEvict(value = "fourHoursCache", key="'userWithId_' + #id")
     public void delete(Long id){
         logger.info("deleting user with id: {}", id);
         User user = repository.findById(id)
@@ -92,6 +98,7 @@ public class UserService {
         repository.delete(user);
     }
 
+    @CacheEvict(value = "fourHoursCache", key="'userWithId_' + #id")
     public void deleteCompanyId(Long id){
         logger.info("deleting company from user with id: {}", id);
         User user = repository.findById(id)
@@ -101,6 +108,7 @@ public class UserService {
         repository.save(user);
     }
 
+    @CacheEvict(value = "fourHoursCache", key="'userWithId_' + #id")
     public void setRole(Long id, RoleEnum role){
         logger.info("setting role for user with id: {}", id);
         User user = repository.findById(id)
@@ -109,6 +117,7 @@ public class UserService {
         repository.save(user);
     }
 
+    @Cacheable(value = "oneHourCache", key = "'isToken' + #token + '_Valid'")
     public void validateToken(String token) {
         if (!tokenService.isTokenValid(token, repository.findByEmail(tokenService.extractUsername(token)).orElseThrow())) {
             throw new RuntimeException("token is invalid");

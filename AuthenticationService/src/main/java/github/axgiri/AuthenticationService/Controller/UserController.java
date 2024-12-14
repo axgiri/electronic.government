@@ -33,7 +33,7 @@ public class UserController {
         this.service = service;
     }
 
-    @PreAuthorize("@middleware.isCompanyAdmin(principal.username, #id)")
+    @PreAuthorize("@middleware.isCompanyMember(principal.username, #id)")
     @GetMapping("/getByCompanyId/{id}")
     public ResponseEntity<List<UserDTO>> getByCompanyId(@PathVariable Long id){
         logger.info("fetching all user with company id: {}", id);

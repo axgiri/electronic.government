@@ -7,6 +7,9 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 import github.axgiri.AuthenticationService.DTO.CompanyDTO;
@@ -54,13 +57,18 @@ public class CompanyService {
         repository.delete(company);
     }
 
+    @Cacheable(value = "oneHourCache", key = "'isCompany_' + #id + '_Active'")
     public boolean isActive(Long id){
         logger.info("is active company with id: {}", id);
         return repository.findActiveById(id)
             .orElseThrow(() -> new RuntimeException("company with id " + id + " not found"));
     }
 
-    public void buy(Long id, PlanEnum plan){
+    @Caching(evict = {
+            @CacheEvict(value = "oneHourCache", allEntries = true),
+            @CacheEvict(value = "isCompanyAndTokenValid", allEntries = true)
+    })
+    public void buy(Long id, PlanEnum plan) {
         logger.info("buying plan for company with id: {}", id);
         Company company = repository.findById(id)
             .orElseThrow(() -> new RuntimeException("company with id " + id + " not found"));
