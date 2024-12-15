@@ -87,6 +87,7 @@ public class UserService {
         user.setName(userDTO.getName());
         user.setSurname(userDTO.getSurname());
         user.setRole(userDTO.getRole());
+        user.setCompany(userDTO.getCompanyId() != null ? companyService.getById(userDTO.getCompanyId()).toEntity() : null);
         return UserDTO.fromEntityToDTO(repository.save(user));
     }    
 
@@ -104,7 +105,7 @@ public class UserService {
         User user = repository.findById(id)
             .orElseThrow(() -> new RuntimeException("user with id " + id + " not found"));
         user.setCompany(null);
-        user.setRole(null);
+        user.setRole(RoleEnum.WORKER);
         repository.save(user);
     }
 

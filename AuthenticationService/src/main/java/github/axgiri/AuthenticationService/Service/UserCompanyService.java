@@ -63,10 +63,10 @@ public class UserCompanyService {
         logger.info("creating company with data: {}", companyDTO);
         String email = tokenService.extractUsername(token);
         UserDTO userDTO = userService.getByEmail(email);
-        userDTO.setCompanyId(companyDTO.getId());
+        CompanyDTO company = companyService.add(companyDTO);
+        userDTO.setCompanyId(company.getId());
         userDTO.setRole(RoleEnum.ADMIN);
-        companyService.add(companyDTO);
         userService.update(userDTO, userDTO.getId());
-        return companyDTO;
-    }   
+        return company;
+    }    
 }

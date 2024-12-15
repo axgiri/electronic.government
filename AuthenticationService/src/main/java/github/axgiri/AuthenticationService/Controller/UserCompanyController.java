@@ -36,10 +36,10 @@ public class UserCompanyController {
         return ResponseEntity.ok(result);
     }
 
-
     @PostMapping("/addToCompany/{code}")
     public ResponseEntity<UserDTO> addToCompany(@PathVariable String code, @RequestHeader("Authorization") String token){
-        logger.info("adding user to company with data: {}");
+        logger.info("adding user to company with token: {}", token);
+        token = token.substring(7);
         return ResponseEntity.ok(service.addUserToCompanyByLink(code, token));
     }
 
@@ -54,6 +54,7 @@ public class UserCompanyController {
     @PostMapping("/createCompany")
     public ResponseEntity<CompanyDTO> create(@RequestBody @Valid CompanyDTO companyDTO, @RequestHeader("Authorization") String token){
         logger.info("creating company with data: {}", companyDTO);
+        token = token.substring(7);
         return ResponseEntity.ok(service.add(companyDTO, token));
     }
 }

@@ -90,10 +90,10 @@ public class UserController {
     }
 
     @GetMapping("/validate")
-    public ResponseEntity<String> validate(@RequestHeader("Authorization") String token){
+    public ResponseEntity<Boolean> validate(@RequestHeader("Authorization") String token){
         logger.info("request to validate token: {}", token);
         token = token.substring(7);
         service.validateToken(token);
-        return ResponseEntity.ok("validation successful");
+        return ResponseEntity.ok(true);
     }
 }
