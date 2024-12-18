@@ -55,6 +55,6 @@ public class UserCompanyController {
     public ResponseEntity<CompanyDTO> create(@RequestBody @Valid CompanyDTO companyDTO, @RequestHeader("Authorization") String token){
         logger.info("creating company with data: {}", companyDTO);
         token = token.substring(7);
-        return ResponseEntity.ok(service.add(companyDTO, token));
+        return ResponseEntity.ok(service.createCompanyAddAdmin(companyDTO, token));
     }
 }

@@ -59,7 +59,7 @@ public class UserCompanyService {
         }
     }
 
-    public CompanyDTO add(CompanyDTO companyDTO, String token){
+    public CompanyDTO createCompanyAddAdmin(CompanyDTO companyDTO, String token){
         logger.info("creating company with data: {}", companyDTO);
         String email = tokenService.extractUsername(token);
         UserDTO userDTO = userService.getByEmail(email);
