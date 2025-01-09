@@ -84,20 +84,3 @@ public class CompanyService {
         repository.save(company);
     }
 }
-
-
-//TODO: sprints
-// TaskService:
-// getAllTasks
-// getTaskById
-// getTaskByUserId
-// getTaskByProject
-// createTask
-// updateTask
-// deleteTask
-
-// getProjects
-// getProjectById
-// createProject
-// updateProject
-// deleteProject
