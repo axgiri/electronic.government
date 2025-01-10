@@ -32,7 +32,7 @@ public class CompanyServiceTest {
 
     @InjectMocks
     private CompanyService service;
-
+ 
     @Test
     public void buyMonthlyPlanTest(){
         Company company = CompanyFactory.create();

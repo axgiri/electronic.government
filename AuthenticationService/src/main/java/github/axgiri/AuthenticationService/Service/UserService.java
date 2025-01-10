@@ -88,7 +88,7 @@ public class UserService {
         user.setSurname(userDTO.getSurname());
         user.setCompany(userDTO.getCompanyId() != null ? companyService.getById(userDTO.getCompanyId()).toEntity() : null);
         return UserDTO.fromEntityToDTO(repository.save(user));
-    }    
+    }
 
     @CacheEvict(value = "fourHoursCache", key="'userWithId_' + #id")
     public void delete(Long id){

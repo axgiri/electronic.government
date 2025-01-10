@@ -27,21 +27,21 @@ services:
     networks:
       - microservices-network
 
-  # policy-service:
-  #   image: openjdk:17-alpine
-  #   container_name: policy-service
-  #   hostname: policy-service
-  #   ports:
-  #     - "8082:8080"
-  #   volumes:
-  #   - ./:/app
-  #   working_dir: /app/insure-policy
-  #   command: /app/insure-policy/mvnw spring-boot:run
-  #   depends_on:
-  #     - policy-db
-  #     - authentication_service
-  #   networks:
-  #     - microservices-network
+  task_service:
+    image: openjdk:17-alpine
+    container_name: task_service
+    hostname: task_service
+    ports:
+      - "8082:8080"
+    volumes:
+    - ./:/app
+    working_dir: /app/TaskService
+    command: /app/TaskService/mvnw spring-boot:run
+    depends_on:
+      - task_db
+      - authentication_service
+    networks:
+      - microservices-network
 
   # purchase-service:
   #   image: openjdk:17-alpine
@@ -89,19 +89,19 @@ services:
     networks:
       - microservices-network
 
-  # policy-db:
-  #   image: postgres:13-alpine
-  #   container_name: policy-db
-  #   ports:
-  #     - "5431:5432"
-  #   environment:
-  #     POSTGRES_USER: postgres
-  #     POSTGRES_PASSWORD: 1
-  #     POSTGRES_DB: policydb
-  #   volumes:
-  #     - policy_db_data:/var/lib/postgresql/data
-  #   networks:
-  #     - microservices-network
+  task_db:
+    image: postgres:13-alpine
+    container_name: task_db
+    ports:
+      - "5431:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1
+      POSTGRES_DB: taskdb
+    volumes:
+      - task_db_data:/var/lib/postgresql/data
+    networks:
+      - microservices-network
 
   # purchase-db:
   #   image: postgres:13-alpine
@@ -127,7 +127,7 @@ services:
       - "7313:80"
     depends_on:
       - authentication_db
-      # - policy-db
+      - task_db
       # - purchase-db
     volumes:
       - pgadmin_data:/var/lib/pgadmin
@@ -175,6 +175,6 @@ networks:
 
 volumes:
   authentication_db_data:
-  # policy_db_data:
+  task_db_data:
   # purchase_db_data:
   pgadmin_data:
