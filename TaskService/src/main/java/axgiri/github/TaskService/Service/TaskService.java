@@ -10,28 +10,28 @@ import reactor.core.publisher.Mono;
 @Service
 public class TaskService {
 
-    private final TaskRepository taskRepository;
+    private final TaskRepository repository;
 
-    public TaskService(TaskRepository taskRepository) {
-        this.taskRepository = taskRepository;
+    public TaskService(TaskRepository repository) {
+        this.repository = repository;
     }
 
-    public Flux<TaskDTO> getAllTasks() {
-        return taskRepository.findAll()
+    public Flux<TaskDTO> get() {
+        return repository.findAll()
             .map(TaskDTO::fromEntityToDTO);
     }
 
-    public Mono<TaskDTO> getTaskById(Long id) {
-        return taskRepository.findById(id)
+    public Mono<TaskDTO> getById(Long id) {
+        return repository.findById(id)
             .map(TaskDTO::fromEntityToDTO);
     }
 
-    public Mono<TaskDTO> createTask(TaskDTO taskDTO) {
-        return taskRepository.save(taskDTO.toEntity())
+    public Mono<TaskDTO> create(TaskDTO taskDTO) {
+        return repository.save(taskDTO.toEntity())
             .map(TaskDTO::fromEntityToDTO);
     }
 
-    public Mono<Void> deleteTask(Long id) {
-        return taskRepository.deleteById(id);
+    public Mono<Void> delete(Long id) {
+        return repository.deleteById(id);
     }
 }

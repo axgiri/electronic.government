@@ -84,3 +84,10 @@ public class CompanyService {
         repository.save(company);
     }
 }
+
+
+//TODO: sprints
+
+//тесты
+//миддлвейры
+//сервис по сокращению который дает таски типа вместо task one дает tk-1

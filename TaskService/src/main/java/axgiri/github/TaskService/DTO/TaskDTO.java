@@ -14,7 +14,6 @@ public class TaskDTO {
 
     private Long id;
 
-    @NotNull(message = "status is required")
     private StatusEnum status;
 
     @NotNull(message = "userId is required")
@@ -35,7 +34,7 @@ public class TaskDTO {
     public Task toEntity() {
         Task task = new Task();
         task.setId(id);
-        task.setStatus(status);
+        task.setStatus(status != null ? status : StatusEnum.TODO);
         task.setUserId(userId);
         task.setProjectId(projectId);
         task.setCreatedBy(createdBy);
