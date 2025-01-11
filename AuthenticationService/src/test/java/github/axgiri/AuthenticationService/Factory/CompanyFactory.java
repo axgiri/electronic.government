@@ -9,7 +9,7 @@ public class CompanyFactory {
 
     private static final Faker faker = new Faker();
 
-    public static Company create(){
+    public static Company create() {
         Company company = new Company();
         company.setId(faker.number().randomNumber());
         company.setName(faker.company().name());
@@ -19,12 +19,12 @@ public class CompanyFactory {
         return company;
     }
 
-    public static CompanyDTO createDTO(){
+    public static CompanyDTO createDTO() {
         Company company = create();
         return CompanyDTO.fromEntityToDTO(company);
     }
 
-    public static CompanyDTO createDTOFromEntity(Company company){
+    public static CompanyDTO createDTOFromEntity(Company company) {
         return CompanyDTO.fromEntityToDTO(company);
     }
 }

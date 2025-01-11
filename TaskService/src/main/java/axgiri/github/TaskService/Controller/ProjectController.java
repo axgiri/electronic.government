@@ -49,7 +49,7 @@ public class ProjectController {
     }
 
     @PutMapping("/addUsers/{id}")
-    public Mono<ProjectDTO> addUsers(@PathVariable Long id, @RequestBody List<Long> userIds){
+    public Mono<ProjectDTO> addUsers(@PathVariable Long id, @RequestBody List<Long> userIds) {
         return service.addUsers(id, userIds);
     }
 

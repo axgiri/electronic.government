@@ -44,7 +44,7 @@ public class InvitationService {
         }
     }
 
-    public InvitationDTO getByCode(String code){
+    public InvitationDTO getByCode(String code) {
         logger.info("getting invitation by code: {}", code);
         Invitation invitation = invitationRepository.findByCode(code)
             .orElseThrow(() -> new IllegalArgumentException("invalid or expired invitation code"));

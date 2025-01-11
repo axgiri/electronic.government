@@ -28,7 +28,7 @@ public class CompanyDTO {
 
     private boolean active;
 
-    public Company toEntity(){
+    public Company toEntity() {
         Company company = new Company();
         company.setId(id);
         company.setName(name);
@@ -38,7 +38,7 @@ public class CompanyDTO {
         return company;
     }
 
-    public static CompanyDTO fromEntityToDTO(Company company){
+    public static CompanyDTO fromEntityToDTO(Company company) {
         return new CompanyDTO(
             company.getId(),
             company.getName(),

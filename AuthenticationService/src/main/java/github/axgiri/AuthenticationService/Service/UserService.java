@@ -40,7 +40,7 @@ public class UserService {
     }
 
     @Cacheable(value = "companyMembers", key = "'company_' + #id + '_Members'")
-    public List<UserDTO> getByCompanyId(Long id){
+    public List<UserDTO> getByCompanyId(Long id) {
         logger.info("fetching users by company id: {}", id);
         return repository.findByCompanyId(id)
             .stream()
@@ -49,7 +49,7 @@ public class UserService {
     }
 
     @Cacheable(value = "fourHoursCache", key="'userWithId_' + #id")
-    public UserDTO getById(Long id){
+    public UserDTO getById(Long id) {
         logger.info("fetching user by id: {}", id);
         User user = repository.findById(id)
             .orElseThrow(() -> new RuntimeException("user with id: " + id + " not found"));
@@ -91,7 +91,7 @@ public class UserService {
     }
 
     @CacheEvict(value = "fourHoursCache", key="'userWithId_' + #id")
-    public void delete(Long id){
+    public void delete(Long id) {
         logger.info("deleting user with id: {}", id);
         User user = repository.findById(id)
             .orElseThrow(() -> new RuntimeException("user with id " + id + " not found"));
@@ -99,7 +99,7 @@ public class UserService {
     }
 
     @CacheEvict(value = "fourHoursCache", key="'userWithId_' + #id")
-    public void deleteCompanyId(Long id){
+    public void deleteCompanyId(Long id) {
         logger.info("deleting company from user with id: {}", id);
         User user = repository.findById(id)
             .orElseThrow(() -> new RuntimeException("user with id " + id + " not found"));
@@ -109,7 +109,7 @@ public class UserService {
     }
 
     @CacheEvict(value = "fourHoursCache", key="'userWithId_' + #id")
-    public void setRole(Long id, RoleEnum role){
+    public void setRole(Long id, RoleEnum role) {
         logger.info("setting role for user with id: {}", id);
         User user = repository.findById(id)
             .orElseThrow(() -> new RuntimeException("user with id " + id + " not found"));
@@ -124,7 +124,7 @@ public class UserService {
         }
     }
 
-    public UserDTO getByEmail(String email){
+    public UserDTO getByEmail(String email) {
         logger.info("fetching user by email: {}", email);
         User user = repository.findByEmail(email)
             .orElseThrow(() -> new RuntimeException("user with email " + email + "not found"));

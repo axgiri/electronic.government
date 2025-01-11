@@ -28,7 +28,7 @@ public class CompanyService {
         this.repository = repository;
     }
 
-    public List<CompanyDTO> get(){
+    public List<CompanyDTO> get() {
         logger.info("fetching all companies");
         List<Company> companies = repository.findAll();
         return companies.stream()
@@ -36,21 +36,21 @@ public class CompanyService {
             .collect(Collectors.toList());
     }
 
-    public CompanyDTO getById(Long id){
+    public CompanyDTO getById(Long id) {
         logger.info("fetching company with id: {}", id );
         Company company = repository.findById(id)
             .orElseThrow(() -> new RuntimeException("comopany with id: " + id + " not found"));
         return CompanyDTO.fromEntityToDTO(company);
     }
 
-    public CompanyDTO add(CompanyDTO companyDTO){
+    public CompanyDTO add(CompanyDTO companyDTO) {
         logger.info("creating company with data: {}", companyDTO);
         Company company = companyDTO.toEntity();
         repository.save(company);
         return CompanyDTO.fromEntityToDTO(company);
     }
 
-    public void delete(Long id){
+    public void delete(Long id) {
         logger.info("deleting company with id: {}", id);
         Company company = repository.findById(id)
             .orElseThrow(() -> new RuntimeException("company with id " + id + " not found"));
@@ -58,7 +58,7 @@ public class CompanyService {
     }
 
     @Cacheable(value = "oneHourCache", key = "'isCompany_' + #id + '_Active'")
-    public boolean isActive(Long id){
+    public boolean isActive(Long id) {
         logger.info("is active company with id: {}", id);
         return repository.findActiveById(id)
             .orElseThrow(() -> new RuntimeException("company with id " + id + " not found"));
@@ -73,9 +73,9 @@ public class CompanyService {
         Company company = repository.findById(id)
             .orElseThrow(() -> new RuntimeException("company with id " + id + " not found"));
 
-        if (plan == PlanEnum.MONTHLY){
+        if (plan == PlanEnum.MONTHLY) {
             company.setSubscriptionExpiration(LocalDate.now().plusMonths(1));
-        } else if (plan == PlanEnum.YEARLY){
+        } else if (plan == PlanEnum.YEARLY) {
             company.setSubscriptionExpiration(LocalDate.now().plusYears(1));
         }
         
@@ -84,10 +84,3 @@ public class CompanyService {
         repository.save(company);
     }
 }
-
-
-//TODO: sprints
-
-//тесты
-//миддлвейры
-//сервис по сокращению который дает таски типа вместо task one дает tk-1

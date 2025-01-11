@@ -27,14 +27,14 @@ public class UserCompanyService {
         this.tokenService = tokenService;
     }
 
-    public String createInvitationLink(Long companyId, int validityDays){
+    public String createInvitationLink(Long companyId, int validityDays) {
         logger.info("creating invitation link for company: {}", companyId);
         CompanyDTO companyDTO = companyService.getById(companyId);
         InvitationDTO invitationDTO = invitationService.create(companyDTO, validityDays);
         return invitationDTO.getCode();
     }
 
-    public UserDTO addUserToCompanyByLink(String code, String token){
+    public UserDTO addUserToCompanyByLink(String code, String token) {
         logger.info("adding user to company with data: {}");
         Boolean isValidCode = invitationService.validate(code);
         if (isValidCode == false) {
@@ -50,16 +50,16 @@ public class UserCompanyService {
     }
 
     @Cacheable(value = "isCompanyAndTokenValid", key="'isToken_' + #token + '_AndCompany_' + #companyId + '_Valid'")
-    public Boolean validate(String token, Long companyId){
+    public Boolean validate(String token, Long companyId) {
         userService.validateToken(token);
-        if (companyService.isActive(companyId) == true){
+        if (companyService.isActive(companyId) == true) {
             return true;
         } else {
             return false;
         }
     }
 
-    public CompanyDTO createCompanyAddAdmin(CompanyDTO companyDTO, String token){
+    public CompanyDTO createCompanyAddAdmin(CompanyDTO companyDTO, String token) {
         logger.info("creating company with data: {}", companyDTO);
         String email = tokenService.extractUsername(token);
         UserDTO userDTO = userService.getByEmail(email);

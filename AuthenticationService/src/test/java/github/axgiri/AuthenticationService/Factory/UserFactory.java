@@ -10,7 +10,7 @@ public class UserFactory {
     
     private static final Faker faker = new Faker();
 
-    public static User create(){
+    public static User create() {
         User user = new User();
         user.setId(faker.number().randomNumber());
         user.setEmail(faker.internet().emailAddress());
@@ -22,12 +22,12 @@ public class UserFactory {
         return user;
     }
 
-    public static UserDTO createDTO(){
+    public static UserDTO createDTO() {
         User user = create();
         return UserDTO.fromEntityToDTO(user);
     }
 
-    public static UserDTO createDTOFromEntity(User user){
+    public static UserDTO createDTOFromEntity(User user) {
         return UserDTO.fromEntityToDTO(user);
     }
 }

@@ -16,18 +16,18 @@ public class InvitationExpirationCommand {
     private final InvitationRepository repository;
 
     @Autowired
-    public InvitationExpirationCommand(InvitationRepository repository){
+    public InvitationExpirationCommand(InvitationRepository repository) {
         this.repository = repository;
     }
 
     @Transactional
     @Scheduled(cron = "0 0 0 * * ?")
-    public void deleteTokens(){
+    public void deleteTokens() {
         LocalDate now = LocalDate.now();
 
         List<Invitation> active = repository.findByExpiresAt(now);
 
-        for (Invitation invitation : active){
+        for (Invitation invitation : active) {
             repository.delete(invitation);
         }
     }

@@ -24,27 +24,27 @@ public class UserCompanyController {
     private static final Logger logger = LoggerFactory.getLogger(UserCompanyController.class);
     private final UserCompanyService service;
 
-    public UserCompanyController(UserCompanyService service){
+    public UserCompanyController(UserCompanyService service) {
         this.service = service;
     }
 
     @PreAuthorize("@middleware.isCompanyModerator(principal.username, #companyId)")
     @GetMapping("/inviteUser")
-    public ResponseEntity<String> createInvitationLink(@RequestParam Long companyId, @RequestParam int TTL){
+    public ResponseEntity<String> createInvitationLink(@RequestParam Long companyId, @RequestParam int TTL) {
         logger.info("creating invitation link for company: {}", companyId);
         String result = "http://localhost:8081/api/users/companies/addToCompany/" + service.createInvitationLink(companyId, TTL);
         return ResponseEntity.ok(result);
     }
 
     @PostMapping("/addToCompany/{code}")
-    public ResponseEntity<UserDTO> addToCompany(@PathVariable String code, @RequestHeader("Authorization") String token){
+    public ResponseEntity<UserDTO> addToCompany(@PathVariable String code, @RequestHeader("Authorization") String token) {
         logger.info("adding user to company with token: {}", token);
         token = token.substring(7);
         return ResponseEntity.ok(service.addUserToCompanyByLink(code, token));
     }
 
     @GetMapping("/validate/{companyId}")
-    public ResponseEntity<Boolean> validate(@RequestHeader("Authorization") String token, @PathVariable Long companyId){
+    public ResponseEntity<Boolean> validate(@RequestHeader("Authorization") String token, @PathVariable Long companyId) {
         logger.info("request to validate token: {}", token);
         token = token.substring(7);
         service.validate(token, companyId);
@@ -52,7 +52,7 @@ public class UserCompanyController {
     }
 
     @PostMapping("/createCompany")
-    public ResponseEntity<CompanyDTO> create(@RequestBody @Valid CompanyDTO companyDTO, @RequestHeader("Authorization") String token){
+    public ResponseEntity<CompanyDTO> create(@RequestBody @Valid CompanyDTO companyDTO, @RequestHeader("Authorization") String token) {
         logger.info("creating company with data: {}", companyDTO);
         token = token.substring(7);
         return ResponseEntity.ok(service.createCompanyAddAdmin(companyDTO, token));

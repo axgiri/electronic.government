@@ -50,7 +50,7 @@ public class UserCompanyServiceTest {
     private TokenService tokenService;
 
     @Test
-    public void createInvitationLinkTest(){
+    public void createInvitationLinkTest() {
         CompanyDTO companyDTO = CompanyFactory.createDTO();
         int validityDays = faker.number().numberBetween(1, 30);
         InvitationDTO invitationDTO = InvitationFactory.createDTO(companyDTO, validityDays);
@@ -63,7 +63,7 @@ public class UserCompanyServiceTest {
     }
 
     @Test
-    public void createInvitationLinkCompanyNotFoundTest(){
+    public void createInvitationLinkCompanyNotFoundTest() {
         Long companyId = faker.number().randomNumber();
         int validityDays = faker.number().numberBetween(1, 30);
         when(companyService.getById(companyId)).thenThrow(new RuntimeException("comopany with id: " + companyId + " not found"));
@@ -78,7 +78,7 @@ public class UserCompanyServiceTest {
     }
 
     @Test
-    public void addUserToCompanyByLinkTest(){
+    public void addUserToCompanyByLinkTest() {
         CompanyDTO companyDTO = CompanyFactory.createDTO();
         String token = faker.name().toString();
         String code = UUID.randomUUID().toString();
