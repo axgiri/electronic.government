@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import axgiri.github.TaskService.DTO.ProjectDTO;
+import axgiri.github.TaskService.Handler.HandlerImpl.TaskHandlerImpl;
 import axgiri.github.TaskService.Repository.ProjectRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -19,10 +20,12 @@ public class ProjectService {
 
     private final ProjectRepository repository;
     private final ObjectMapper objectMapper;
+    private final TaskHandlerImpl taskHandlerImpl;
 
-    public ProjectService(ProjectRepository repository, ObjectMapper objectMapper) {
+    public ProjectService(ProjectRepository repository, ObjectMapper objectMapper, TaskHandlerImpl taskHandlerImpl) {
         this.repository = repository;
         this.objectMapper = objectMapper;
+        this.taskHandlerImpl = taskHandlerImpl;
     }
 
     public Flux<ProjectDTO> get() {
@@ -106,7 +109,12 @@ public class ProjectService {
                 .map(updatedProject -> ProjectDTO.fromEntityToDTO(updatedProject, objectMapper));
     }
 
-    public Mono<Void> delete(Long id) {
-        return repository.deleteById(id);
+    public Mono<Void> delete(Long projectId) {
+        return repository.findById(projectId)
+            .switchIfEmpty(Mono.error(new RuntimeException("project not found")))
+            .flatMap(project -> {
+                taskHandlerImpl.deleteTasksByProjectId(projectId);
+                return repository.deleteById(projectId);
+            });
     }
 }
