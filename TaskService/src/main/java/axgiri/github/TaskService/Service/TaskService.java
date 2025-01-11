@@ -26,6 +26,28 @@ public class TaskService {
             .map(TaskDTO::fromEntityToDTO);
     }
 
+    public Flux<TaskDTO> getByUserId(Long userId) {
+        return repository.findByUserId(userId)
+            .map(TaskDTO::fromEntityToDTO);
+    }
+
+    public Flux<TaskDTO> getByProjectId(Long projectId){
+        return repository.findByProjectId(projectId)
+            .map(TaskDTO::fromEntityToDTO);
+    }
+
+    public Mono<TaskDTO> update(Long id, TaskDTO taskDTO){
+        return repository.findById(id)
+            .switchIfEmpty(Mono.error(new RuntimeException("task not found")))
+            .flatMap(existingTask -> {
+                existingTask.setStatus(taskDTO.getStatus());
+                existingTask.setUserId(taskDTO.getUserId());
+                existingTask.setDescription(taskDTO.getDescription());
+                return repository.save(existingTask);
+            })
+            .map(TaskDTO::fromEntityToDTO);
+    }
+
     public Mono<TaskDTO> create(TaskDTO taskDTO) {
         return repository.save(taskDTO.toEntity())
             .map(TaskDTO::fromEntityToDTO);

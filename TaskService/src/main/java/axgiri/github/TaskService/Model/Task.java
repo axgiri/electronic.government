@@ -6,11 +6,8 @@ import org.springframework.data.relational.core.mapping.Table;
 
 import axgiri.github.TaskService.Enum.StatusEnum;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -32,9 +29,6 @@ public class Task {
     @Column("user_id")
     private Long userId;
 
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_id", nullable = false)
     @Column("project_id")
     private Long projectId;
 

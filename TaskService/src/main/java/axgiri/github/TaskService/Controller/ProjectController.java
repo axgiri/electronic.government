@@ -1,5 +1,8 @@
 package axgiri.github.TaskService.Controller;
 
+import java.util.List;
+
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +19,7 @@ import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/api/projects")
+@Validated
 public class ProjectController {
 
     private final ProjectService service;
@@ -32,6 +36,21 @@ public class ProjectController {
     @GetMapping("/{id}")
     public Mono<ProjectDTO> getProject(@PathVariable Long id) {
         return service.getById(id);
+    }
+
+    @GetMapping("/getUsers/{id}")
+    public Mono<List<Long>> getUsersByProjectId(@PathVariable Long id) {
+        return service.getUsers(id);
+    }
+
+    @PostMapping("/removeUsers/{id}")
+    public Mono<ProjectDTO> removeUsers(@PathVariable Long id, @RequestBody List<Long> userIds) {
+        return service.removeUsers(id, userIds);
+    }
+
+    @PutMapping("/addUsers/{id}")
+    public Mono<ProjectDTO> addUsers(@PathVariable Long id, @RequestBody List<Long> userIds){
+        return service.addUsers(id, userIds);
     }
 
     @PostMapping
