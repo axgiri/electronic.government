@@ -29,7 +29,7 @@ public class CompanyController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CompanyDTO>> get(){
+    public ResponseEntity<List<CompanyDTO>> get() {
         logger.info("fetching all companies");
         List<CompanyDTO> companies = service.get();
         return ResponseEntity.ok(companies);
@@ -37,14 +37,14 @@ public class CompanyController {
 
     @PreAuthorize("@middleware.isCompanyMember(principal.username, #id)")
     @GetMapping("/{id}")
-    public ResponseEntity<CompanyDTO> getById(@PathVariable Long id){
+    public ResponseEntity<CompanyDTO> getById(@PathVariable Long id) {
         logger.info("fetching company with id: {}", id);
         return ResponseEntity.ok(service.getById(id));
     }
 
     @PreAuthorize("@middleware.isCompanyAdmin(principal.username, #id)")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id){
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         logger.info("deleting company with id: {}", id);
         service.delete(id);
         return ResponseEntity.ok().build();
@@ -52,14 +52,14 @@ public class CompanyController {
 
     @PreAuthorize("@middleware.isCompanyMember(principal.username, #id)")
     @GetMapping("/subscriptions/isActive/{id}")
-    public ResponseEntity<Boolean> isActive(@PathVariable Long id){
+    public ResponseEntity<Boolean> isActive(@PathVariable Long id) {
         logger.info("is avtive: {}", id);
         return ResponseEntity.ok(service.isActive(id));
     }
 
     @PreAuthorize("@middleware.isCompanyAdmin(principal.username, #id)")
     @PostMapping("/subscriptions/buy/{id}")
-    public ResponseEntity<Void> buy(@PathVariable Long id, @RequestParam PlanEnum plan){
+    public ResponseEntity<Void> buy(@PathVariable Long id, @RequestParam PlanEnum plan) {
         logger.info("buying plan for: {}", id);
         service.buy(id, plan);
         return ResponseEntity.ok().build();

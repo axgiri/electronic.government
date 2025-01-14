@@ -39,6 +39,8 @@ public class ProjectDTO {
         try {
             if (usersId != null) {
                 project.setUsersId(objectMapper.writeValueAsString(usersId));
+            } else {
+                return null;
             }
         } catch (Exception e) {
             throw new RuntimeException("failed to convert usersId to JSON", e);

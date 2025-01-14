@@ -37,17 +37,17 @@ public class TaskController {
     }
 
     @GetMapping("/user/{userId}")
-    public Flux<TaskDTO> getTasksByUserId(@PathVariable Long userId){
+    public Flux<TaskDTO> getTasksByUserId(@PathVariable Long userId) {
         return service.getByUserId(userId);
     }
     
     @GetMapping("/project/{projectId}")
-    public Flux<TaskDTO> getTasksByProject(@PathVariable Long projectId){
+    public Flux<TaskDTO> getTasksByProject(@PathVariable Long projectId) {
         return service.getByProjectId(projectId);
     }
 
     @PutMapping
-    public Mono<TaskDTO> updateTask(@PathVariable Long id, @RequestBody TaskDTO taskDTO){
+    public Mono<TaskDTO> updateTask(@PathVariable Long id, @RequestBody TaskDTO taskDTO) {
         return service.update(id, taskDTO);
     }
 

@@ -34,7 +34,7 @@ public class CompanyServiceTest {
     private CompanyService service;
  
     @Test
-    public void buyMonthlyPlanTest(){
+    public void buyMonthlyPlanTest() {
         Company company = CompanyFactory.create();
         PlanEnum plan = PlanEnum.MONTHLY;
         when(companyRepository.findById(company.getId())).thenReturn(Optional.of(company));
@@ -48,7 +48,7 @@ public class CompanyServiceTest {
     }
 
     @Test
-    public void buyYearlyPlanTest(){
+    public void buyYearlyPlanTest() {
         Company company = CompanyFactory.create();
         PlanEnum plan = PlanEnum.YEARLY;        
         when(companyRepository.findById(company.getId())).thenReturn(Optional.of(company));
@@ -62,7 +62,7 @@ public class CompanyServiceTest {
     }
 
     @Test
-    public void buyCompanyNotFoundTest(){
+    public void buyCompanyNotFoundTest() {
         Long companyId = 1L;
         PlanEnum plan = PlanEnum.MONTHLY;
         when(companyRepository.findById(companyId)).thenReturn(Optional.empty());

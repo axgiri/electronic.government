@@ -31,12 +31,12 @@ public class TaskService {
             .map(TaskDTO::fromEntityToDTO);
     }
 
-    public Flux<TaskDTO> getByProjectId(Long projectId){
+    public Flux<TaskDTO> getByProjectId(Long projectId) {
         return repository.findByProjectId(projectId)
             .map(TaskDTO::fromEntityToDTO);
     }
 
-    public Mono<TaskDTO> update(Long id, TaskDTO taskDTO){
+    public Mono<TaskDTO> update(Long id, TaskDTO taskDTO) {
         return repository.findById(id)
             .switchIfEmpty(Mono.error(new RuntimeException("task not found")))
             .flatMap(existingTask -> {
