@@ -44,10 +44,10 @@ public class UserCompanyController {
     }
 
     @GetMapping("/validate/{companyId}")
-    public ResponseEntity<Boolean> validate(@RequestHeader("Authorization") String token, @PathVariable Long companyId) {
+    public ResponseEntity<Boolean> validate(@RequestHeader("Authorization") String token) {
         logger.info("request to validate token: {}", token);
         token = token.substring(7);
-        service.validate(token, companyId);
+        service.validate(token);
         return ResponseEntity.ok(true);
     }
 
