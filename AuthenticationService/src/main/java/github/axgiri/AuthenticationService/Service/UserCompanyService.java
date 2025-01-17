@@ -49,10 +49,12 @@ public class UserCompanyService {
         return userDTO;
     }
 
-    @Cacheable(value = "isCompanyAndTokenValid", key="'isToken_' + #token + '_AndCompany_' + #companyId + '_Valid'")
-    public Boolean validate(String token, Long companyId) {
+    @Cacheable(value = "isCompanyAndTokenValid", key="'isToken_' + #token + '_AndCompany_Valid'")
+    public Boolean validate(String token) {
         userService.validateToken(token);
-        if (companyService.isActive(companyId) == true) {
+        String email = tokenService.extractUsername(token);
+        UserDTO userDTO = userService.getByEmail(email);
+        if (companyService.isActive(userDTO.getCompanyId()) == true) {
             return true;
         } else {
             return false;

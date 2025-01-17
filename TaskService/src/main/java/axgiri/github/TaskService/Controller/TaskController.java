@@ -31,32 +31,32 @@ public class TaskController {
         return service.get();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/members/{id}")
     public Mono<TaskDTO> getTaskById(@PathVariable Long id) {
         return service.getById(id);
     }
 
-    @GetMapping("/user/{userId}")
+    @GetMapping("/members/user/{userId}")
     public Flux<TaskDTO> getTasksByUserId(@PathVariable Long userId) {
         return service.getByUserId(userId);
     }
     
-    @GetMapping("/project/{projectId}")
+    @GetMapping("/members/project/{projectId}")
     public Flux<TaskDTO> getTasksByProject(@PathVariable Long projectId) {
         return service.getByProjectId(projectId);
     }
 
-    @PutMapping
+    @PutMapping("/moderators/{id}")
     public Mono<TaskDTO> updateTask(@PathVariable Long id, @RequestBody TaskDTO taskDTO) {
         return service.update(id, taskDTO);
     }
 
-    @PostMapping
+    @PostMapping("/members")
     public Mono<TaskDTO> createTask(@RequestBody TaskDTO taskDTO) {
         return service.create(taskDTO);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/moderators/{id}")
     public Mono<Void> deleteTask(@PathVariable Long id) {
         return service.delete(id);
     }

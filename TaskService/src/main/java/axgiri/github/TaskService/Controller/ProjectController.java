@@ -33,37 +33,37 @@ public class ProjectController {
         return service.get();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/members/{id}")
     public Mono<ProjectDTO> getProject(@PathVariable Long id) {
         return service.getById(id);
     }
 
-    @GetMapping("/getUsers/{id}")
+    @GetMapping("/members/getUsers/{id}")
     public Mono<List<Long>> getUsersByProjectId(@PathVariable Long id) {
         return service.getUsers(id);
     }
 
-    @PostMapping("/removeUsers/{id}")
+    @PutMapping("/moderators/removeUsers/{id}")
     public Mono<ProjectDTO> removeUsers(@PathVariable Long id, @RequestBody List<Long> userIds) {
         return service.removeUsers(id, userIds);
     }
 
-    @PutMapping("/addUsers/{id}")
+    @PutMapping("/moderators/addUsers/{id}")
     public Mono<ProjectDTO> addUsers(@PathVariable Long id, @RequestBody List<Long> userIds) {
         return service.addUsers(id, userIds);
     }
 
-    @PostMapping
+    @PostMapping("/admins")
     public Mono<ProjectDTO> createProject(@RequestBody ProjectDTO projectDTO) {
         return service.create(projectDTO);
     }
 
-    @PutMapping
+    @PutMapping("/admins/{id}")
     public Mono<ProjectDTO> update(@PathVariable Long id, @RequestBody ProjectDTO projectDTO) {
         return service.update(id, projectDTO);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/admins/{id}")
     public Mono<Void> deleteProject(@PathVariable Long id) {
         return service.delete(id);
     }
