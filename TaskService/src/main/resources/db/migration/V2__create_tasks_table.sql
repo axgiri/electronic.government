@@ -4,6 +4,6 @@ CREATE TABLE tasks (
     user_id BIGINT NOT NULL,
     project_id BIGINT NOT NULL,
     created_by BIGINT NOT NULL,
-    created_at TIMESTAMP NOT NULL,
+    created_at VARCHAR(255) NOT NULL,
     description TEXT NOT NULL
 );
