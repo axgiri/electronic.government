@@ -1,4 +1,4 @@
-package axgiri.github.TaskService.configuration;
+package axgiri.github.TaskService.Configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -118,10 +118,11 @@ public class UserService {
     }
 
     @Cacheable(value = "oneHourCache", key = "'isToken' + #token + '_Valid'")
-    public void validateToken(String token) {
+    public boolean validateToken(String token) {
         if (!tokenService.isTokenValid(token, repository.findByEmail(tokenService.extractUsername(token)).orElseThrow())) {
             throw new RuntimeException("token is invalid");
         }
+        return true;
     }
 
     public UserDTO getByEmail(String email) {

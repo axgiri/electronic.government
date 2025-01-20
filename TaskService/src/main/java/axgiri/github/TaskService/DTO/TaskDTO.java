@@ -1,5 +1,7 @@
 package axgiri.github.TaskService.DTO;
 
+import java.time.LocalDateTime;
+
 import axgiri.github.TaskService.Enum.StatusEnum;
 import axgiri.github.TaskService.Model.Task;
 import jakarta.validation.constraints.NotNull;
@@ -25,7 +27,6 @@ public class TaskDTO {
     @NotNull(message = "createdBy is required")
     private Long createdBy;
 
-    @NotNull(message = "createdAt is required")
     private String createdAt;
 
     @NotNull(message = "description is required")
@@ -38,7 +39,7 @@ public class TaskDTO {
         task.setUserId(userId);
         task.setProjectId(projectId);
         task.setCreatedBy(createdBy);
-        task.setCreatedAt(createdAt);
+        task.setCreatedAt(LocalDateTime.now().toString());
         task.setDescription(description);
         return task;
     }

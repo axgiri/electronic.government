@@ -1,16 +1,16 @@
 services:
-  # gateway:
-  #   image: openjdk:17-alpine
-  #   container_name: gateway
-  #   hostname: gateway
-  #   ports:
-  #     - "8080:8080"
-  #   volumes:
-  #   - ./:/app
-  #   working_dir: /app/gateway
-  #   command: /app/gateway/mvnw spring-boot:run
-  #   networks:
-  #     - microservices-network
+  gateway:
+    image: openjdk:17-alpine
+    container_name: gateway
+    hostname: gateway
+    ports:
+      - "8080:8080"
+    volumes:
+    - ./:/app
+    working_dir: /app/Gateway
+    command: /app/Gateway/mvnw spring-boot:run
+    networks:
+      - microservices-network
 
   authentication_service:
     image: openjdk:17-alpine
@@ -43,38 +43,6 @@ services:
     networks:
       - microservices-network
 
-  # purchase-service:
-  #   image: openjdk:17-alpine
-  #   container_name: purchase-service
-  #   hostname: purchase-service
-  #   ports:
-  #     - "8083:8080"
-  #   volumes:
-  #   - ./:/app
-  #   working_dir: /app/purchase-service
-  #   command: /app/purchase-service/mvnw spring-boot:run
-  #   depends_on:
-  #     - purchase-db
-  #     - authentication_service
-  #     - purchase-redis
-  #   networks:
-  #     - microservices-network
-
-  # document-service:
-  #   image: openjdk:17-alpine
-  #   container_name: document-service
-  #   hostname: document-service
-  #   ports:
-  #     - "8084:8080"
-  #   volumes:
-  #   - ./:/app
-  #   working_dir: /app/document-service
-  #   command: /app/document-service/mvnw spring-boot:run
-  #   depends_on:
-  #     - authentication_db
-  #   networks:
-  #     - microservices-network
-
   authentication_db:
     image: postgres:13-alpine
     container_name: authentication_db
@@ -103,20 +71,6 @@ services:
     networks:
       - microservices-network
 
-  # purchase-db:
-  #   image: postgres:13-alpine
-  #   container_name: purchase-db
-  #   ports:
-  #     - "5430:5432"
-  #   environment:
-  #     POSTGRES_USER: postgres
-  #     POSTGRES_PASSWORD: 1
-  #     POSTGRES_DB: purchasedb
-  #   volumes:
-  #     - purchase_db_data:/var/lib/postgresql/data
-  #   networks:
-  #     - microservices-network
-
   pgadmin:
     image: dpage/pgadmin4
     container_name: pgadmin
@@ -128,7 +82,6 @@ services:
     depends_on:
       - authentication_db
       - task_db
-      # - purchase-db
     volumes:
       - pgadmin_data:/var/lib/pgadmin
     networks:
@@ -145,29 +98,29 @@ services:
     networks:
       - microservices-network
 
-  # zookeeper:
-  #   image: confluentinc/cp-zookeeper:7.7.1
-  #   container_name: zookeeper
-  #   environment:
-  #     ZOOKEEPER_CLIENT_PORT: 2181
-  #     ZOOKEEPER_TICK_TIME: 2000
-  #   networks:
-  #     - microservices-network
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.7.1
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - microservices-network
 
-  # kafka:
-  #   image: confluentinc/cp-kafka:7.7.1
-  #   container_name: kafka
-  #   depends_on:
-  #     - zookeeper
-  #   ports:
-  #     - "9092:9092"
-  #   environment:
-  #     KAFKA_BROKER_ID: 1
-  #     KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-  #     KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
-  #     KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-  #   networks:
-  #     - microservices-network
+  kafka:
+    image: confluentinc/cp-kafka:7.7.1
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    networks:
+      - microservices-network
 
 networks:
   microservices-network:
@@ -176,5 +129,4 @@ networks:
 volumes:
   authentication_db_data:
   task_db_data:
-  # purchase_db_data:
   pgadmin_data:
