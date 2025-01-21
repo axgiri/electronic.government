@@ -19,7 +19,7 @@ import github.axgiri.AuthenticationService.Enum.PlanEnum;
 import github.axgiri.AuthenticationService.Service.CompanyService;
 
 @RestController
-@RequestMapping("/api/companies")
+@RequestMapping("/api/auth/companies")
 public class CompanyController {
     private static final Logger logger = LoggerFactory.getLogger(CompanyController.class);
     private final CompanyService service;

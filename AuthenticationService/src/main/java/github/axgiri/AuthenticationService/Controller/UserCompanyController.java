@@ -19,7 +19,7 @@ import github.axgiri.AuthenticationService.Service.UserCompanyService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/users/companies")
+@RequestMapping("/api/auth/users/companies")
 public class UserCompanyController {
     private static final Logger logger = LoggerFactory.getLogger(UserCompanyController.class);
     private final UserCompanyService service;

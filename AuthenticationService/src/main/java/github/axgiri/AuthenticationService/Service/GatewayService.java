@@ -34,11 +34,6 @@ public class GatewayService {
         return middleware.isCompanyAdmin(email, authRequestDTO.getCompanyId());
     }
 
-    public boolean checkIsSameUser(AuthRequestDTO authRequestDTO) {
-        String email = tokenService.extractUsername(authRequestDTO.getToken());
-        return middleware.isSameUser(email, authRequestDTO.getCreatedBy());
-    }
-
     public boolean checkTokenAndCompany(String token) {
         return userCompanyService.validate(token);
     }

@@ -6,7 +6,5 @@ import lombok.Data;
 public class AuthRequestDTO {
     private String token;
     private Long companyId;
-    private Long taskId;
-    private Long createdBy;
-    private String role;
+    private String routeRole;
 }

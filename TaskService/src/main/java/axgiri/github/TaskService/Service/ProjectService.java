@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import axgiri.github.TaskService.DTO.ProjectDTO;
 import axgiri.github.TaskService.Handler.HandlerImpl.TaskHandlerImpl;
+import axgiri.github.TaskService.Model.Project;
 import axgiri.github.TaskService.Repository.ProjectRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -49,6 +50,12 @@ public class ProjectService {
                     return Mono.error(new RuntimeException("failed to parse usersId JSON", e));
                 }
             });
+    }
+
+    public Mono<Long> getCompanyIdByProjectId(Long projectId) {
+        return repository.findById(projectId)
+            .switchIfEmpty(Mono.error(new RuntimeException("project not found")))
+            .map(Project::getCompanyId);
     }
 
     public Mono<ProjectDTO> removeUsers(Long projectId, List<Long> userIds) {

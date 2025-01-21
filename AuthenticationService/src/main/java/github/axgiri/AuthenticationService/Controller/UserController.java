@@ -24,7 +24,7 @@ import github.axgiri.AuthenticationService.Service.UserService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/auth/users")
 public class UserController {
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
     private UserService service;

@@ -43,6 +43,11 @@ public class ProjectController {
         return service.getUsers(id);
     }
 
+    @GetMapping("public/getCompanyByProject/{id}")
+    public Mono<Long> getCompanyIdByProjectId(@PathVariable Long id){
+        return service.getCompanyIdByProjectId(id);
+    }
+
     @PutMapping("/moderators/removeUsers/{id}")
     public Mono<ProjectDTO> removeUsers(@PathVariable Long id, @RequestBody List<Long> userIds) {
         return service.removeUsers(id, userIds);
