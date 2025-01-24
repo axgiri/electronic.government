@@ -2,7 +2,7 @@ package github.axgiri.AuthenticationService.Service;
 
 import org.springframework.stereotype.Service;
 
-import github.axgiri.AuthenticationService.DTO.AuthRequestDTO;
+import github.axgiri.AuthenticationService.requests.AuthRequest;
 import github.axgiri.AuthenticationService.Security.Middleware;
 import github.axgiri.AuthenticationService.Security.TokenService;
 
@@ -19,22 +19,22 @@ public class GatewayService {
         this.tokenService = tokenService;
     }
 
-    public boolean checkIsMember(AuthRequestDTO authRequestDTO) {
+    public boolean checkIsMember(AuthRequest authRequestDTO) {
         String email = tokenService.extractUsername(authRequestDTO.getToken());
         return middleware.isCompanyMember(email, authRequestDTO.getCompanyId());
     }
 
-    public boolean checkIsModerator(AuthRequestDTO authRequestDTO) {
+    public boolean checkIsModerator(AuthRequest authRequestDTO) {
         String email = tokenService.extractUsername(authRequestDTO.getToken());
         return middleware.isCompanyModerator(email, authRequestDTO.getCompanyId());
     };
 
-    public boolean checkIsAdmin(AuthRequestDTO authRequestDTO) {
+    public boolean checkIsAdmin(AuthRequest authRequestDTO) {
         String email = tokenService.extractUsername(authRequestDTO.getToken());
         return middleware.isCompanyAdmin(email, authRequestDTO.getCompanyId());
     }
 
-    public boolean checkIsSameUser(AuthRequestDTO authRequestDTO) {
+    public boolean checkIsSameUser(AuthRequest authRequestDTO) {
         String email = tokenService.extractUsername(authRequestDTO.getToken());
         return middleware.isSameUser(email, authRequestDTO.getCreatedBy());
     }

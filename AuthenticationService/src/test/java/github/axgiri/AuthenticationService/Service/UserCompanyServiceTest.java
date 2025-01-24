@@ -13,6 +13,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.UUID;
 
+import github.axgiri.AuthenticationService.Model.Company;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -21,9 +22,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.github.javafaker.Faker;
 
-import github.axgiri.AuthenticationService.DTO.CompanyDTO;
-import github.axgiri.AuthenticationService.DTO.InvitationDTO;
-import github.axgiri.AuthenticationService.DTO.UserDTO;
+import github.axgiri.AuthenticationService.requests.CompanyRequest;
+import github.axgiri.AuthenticationService.requests.InvitationRequest;
+import github.axgiri.AuthenticationService.requests.UserRequest;
 import github.axgiri.AuthenticationService.Factory.CompanyFactory;
 import github.axgiri.AuthenticationService.Factory.InvitationFactory;
 import github.axgiri.AuthenticationService.Factory.UserFactory;
@@ -51,15 +52,15 @@ public class UserCompanyServiceTest {
 
     @Test
     public void createInvitationLinkTest() {
-        CompanyDTO companyDTO = CompanyFactory.createDTO();
+        Company company = CompanyFactory.create();
         int validityDays = faker.number().numberBetween(1, 30);
-        InvitationDTO invitationDTO = InvitationFactory.createDTO(companyDTO, validityDays);
-        when(companyService.getById(companyDTO.getId())).thenReturn(companyDTO);
-        when(invitationService.create(companyDTO, validityDays)).thenReturn(invitationDTO);
-        String result = service.createInvitationLink(companyDTO.getId(), validityDays);
+        InvitationRequest invitationDTO = InvitationFactory.createDTO(company, validityDays);
+        when(companyService.getById(company.getId())).thenReturn(company);
+        when(invitationService.create(company, validityDays)).thenReturn(invitationDTO);
+        String result = service.createInvitationLink(company.getId(), validityDays);
         assertEquals(invitationDTO.getCode(), result);
-        verify(companyService, times(1)).getById(companyDTO.getId());
-        verify(invitationService, times(1)).create(companyDTO, validityDays);
+        verify(companyService, times(1)).getById(company.getId());
+        verify(invitationService, times(1)).create(company, validityDays);
     }
 
     @Test
@@ -79,17 +80,17 @@ public class UserCompanyServiceTest {
 
     @Test
     public void addUserToCompanyByLinkTest() {
-        CompanyDTO companyDTO = CompanyFactory.createDTO();
+        Company company = CompanyFactory.create();
         String token = faker.name().toString();
         String code = UUID.randomUUID().toString();
-        InvitationDTO invitationDTO = InvitationFactory.createDTO(companyDTO, faker.number().numberBetween(1, 30));
-        UserDTO userDTO = UserFactory.createDTO();
+        InvitationRequest invitationDTO = InvitationFactory.createDTO(company, faker.number().numberBetween(1, 30));
+        UserRequest userDTO = UserFactory.createDTO();
         when(invitationService.validate(code)).thenReturn(true);
         when(invitationService.getByCode(code)).thenReturn(invitationDTO);
         when(tokenService.extractUsername(token)).thenReturn(userDTO.getEmail());
         when(userService.getByEmail(userDTO.getEmail())).thenReturn(userDTO);
         when(userService.update(userDTO, userDTO.getId())).thenReturn(userDTO);
-        UserDTO result = service.addUserToCompanyByLink(code, token);
+        UserRequest result = service.addUserToCompanyByLink(code, token);
         assertEquals(userDTO, result);
         assertEquals(invitationDTO.getCompanyId(), userDTO.getCompanyId());
         verify(invitationService, times(1)).validate(code);

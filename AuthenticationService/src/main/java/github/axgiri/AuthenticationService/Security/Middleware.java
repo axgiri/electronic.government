@@ -2,14 +2,12 @@ package github.axgiri.AuthenticationService.Security;
 
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import github.axgiri.AuthenticationService.DTO.UserDTO;
+import github.axgiri.AuthenticationService.requests.UserRequest;
 import github.axgiri.AuthenticationService.Enum.RoleEnum;
 import github.axgiri.AuthenticationService.Service.UserService;
 
 @Service("middleware")
-@Transactional(readOnly = true)
 public class Middleware {
 
     private final UserService userService;
@@ -19,7 +17,7 @@ public class Middleware {
     }
 
     public boolean isCompanyAdmin(String username, Long companyId) {
-        UserDTO userDTO = userService.getByEmail(username);
+        UserRequest userDTO = userService.getByEmail(username);
         if (userDTO.getCompanyId() == null) {
             throw new RuntimeException("current user does not belong to any company");
         }
@@ -32,7 +30,7 @@ public class Middleware {
 
     @Cacheable(value = "fourHoursCache", key="'is_' + #username + '_BelongsToCompany_' + #companyId")
     public boolean isCompanyMember(String username, Long companyId) {
-        UserDTO userDTO = userService.getByEmail(username);
+        UserRequest userDTO = userService.getByEmail(username);
         if (userDTO.getCompanyId() == null) {
             return false;
         }
@@ -40,12 +38,12 @@ public class Middleware {
     }
     
     public boolean isSameUser(String username, Long userId) {
-        UserDTO userDTO = userService.getByEmail(username);
+        UserRequest userDTO = userService.getByEmail(username);
         return userDTO.getId().equals(userId);
     }
 
     public boolean isCompanyModerator(String username, Long companyId) {
-        UserDTO userDTO = userService.getByEmail(username);
+        UserRequest userDTO = userService.getByEmail(username);
         if (userDTO.getCompanyId() == null) {
             throw new RuntimeException("current user does not belong to any company");
         }
@@ -57,8 +55,8 @@ public class Middleware {
     }
     
     public boolean isCompanyModeratorForUser(String username, Long userId) {
-        UserDTO currentUser = userService.getByEmail(username);
-        UserDTO targetUser = userService.getById(userId);
+        UserRequest currentUser = userService.getByEmail(username);
+        UserRequest targetUser = userService.getById(userId);
         if (targetUser.getCompanyId() == null) {
             throw new RuntimeException("target user does not belong to any company");
         }

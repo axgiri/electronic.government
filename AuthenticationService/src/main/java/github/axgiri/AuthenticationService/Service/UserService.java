@@ -12,8 +12,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import github.axgiri.AuthenticationService.DTO.LoginRequest;
-import github.axgiri.AuthenticationService.DTO.UserDTO;
+import github.axgiri.AuthenticationService.requests.LoginRequest;
+import github.axgiri.AuthenticationService.requests.UserRequest;
 import github.axgiri.AuthenticationService.Enum.RoleEnum;
 import github.axgiri.AuthenticationService.Model.Company;
 import github.axgiri.AuthenticationService.Model.User;
@@ -40,20 +40,20 @@ public class UserService {
     }
 
     @Cacheable(value = "companyMembers", key = "'company_' + #id + '_Members'")
-    public List<UserDTO> getByCompanyId(Long id) {
+    public List<UserRequest> getByCompanyId(Long id) {
         logger.info("fetching users by company id: {}", id);
         return repository.findByCompanyId(id)
             .stream()
-            .map(UserDTO::fromEntityToDTO)
+            .map(UserRequest::fromEntityToDTO)
             .collect(Collectors.toList());
     }
 
     @Cacheable(value = "fourHoursCache", key="'userWithId_' + #id")
-    public UserDTO getById(Long id) {
+    public UserRequest getById(Long id) {
         logger.info("fetching user by id: {}", id);
         User user = repository.findById(id)
             .orElseThrow(() -> new RuntimeException("user with id: " + id + " not found"));
-        return UserDTO.fromEntityToDTO(user);
+        return UserRequest.fromEntityToDTO(user);
     }
 
     public AuthResponse authenticate(LoginRequest request) {
@@ -61,24 +61,24 @@ public class UserService {
         var user = repository.findByEmail(request.getEmail())
             .orElseThrow(() -> new RuntimeException("User with email: " + request.getEmail() + " not found"));
         String token = tokenService.generateToken(user);
-        return new AuthResponse(token, UserDTO.fromEntityToDTO(user));
+        return new AuthResponse(token, UserRequest.fromEntityToDTO(user));
     }
 
-    public AuthResponse add(UserDTO userDTO) {
+    public AuthResponse add(UserRequest userDTO) {
         logger.info("adding new user: {}", userDTO);
         Company company = null;
         if (userDTO.getCompanyId() != null) {
-            company = companyService.getById(userDTO.getCompanyId()).toEntity();
+            company = companyService.getById(userDTO.getCompanyId());
         }
         User user = userDTO.toEntity(company);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         repository.save(user);
         String token = tokenService.generateToken(user);
-        return new AuthResponse(token, UserDTO.fromEntityToDTO(user));
+        return new AuthResponse(token, UserRequest.fromEntityToDTO(user));
     }
 
     @CacheEvict(value = "fourHoursCache", key="'userWithId_' + #id")
-    public UserDTO update(UserDTO userDTO, Long id) {
+    public UserRequest update(UserRequest userDTO, Long id) {
         logger.info("updating user: {}", userDTO);
         User user = repository.findById(id)
             .orElseThrow(() -> new RuntimeException("user with id: " + id + " not found"));
@@ -86,8 +86,8 @@ public class UserService {
         user.setPassword(userDTO.getPassword());
         user.setName(userDTO.getName());
         user.setSurname(userDTO.getSurname());
-        user.setCompany(userDTO.getCompanyId() != null ? companyService.getById(userDTO.getCompanyId()).toEntity() : null);
-        return UserDTO.fromEntityToDTO(repository.save(user));
+        user.setCompany(userDTO.getCompanyId() != null ? companyService.getById(userDTO.getCompanyId()) : null);
+        return UserRequest.fromEntityToDTO(repository.save(user));
     }
 
     @CacheEvict(value = "fourHoursCache", key="'userWithId_' + #id")
@@ -125,10 +125,10 @@ public class UserService {
         return true;
     }
 
-    public UserDTO getByEmail(String email) {
+    public UserRequest getByEmail(String email) {
         logger.info("fetching user by email: {}", email);
         User user = repository.findByEmail(email)
             .orElseThrow(() -> new RuntimeException("user with email " + email + "not found"));
-        return UserDTO.fromEntityToDTO(user);
+        return UserRequest.fromEntityToDTO(user);
     }
 }

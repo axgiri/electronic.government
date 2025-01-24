@@ -16,7 +16,7 @@ import org.springframework.kafka.annotation.EnableKafka;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import github.axgiri.AuthenticationService.DTO.AuthRequestDTO;
+import github.axgiri.AuthenticationService.requests.AuthRequest;
 import github.axgiri.AuthenticationService.Security.TaskSecurityService;
 
 import java.io.IOException;
@@ -68,7 +68,7 @@ public class KafkaConfig {
                     }
 
                     String jsonRequest = record.value();
-                    AuthRequestDTO requestDTO = parseJson(jsonRequest);
+                    AuthRequest requestDTO = parseJson(jsonRequest);
                     boolean isAuthorized = checkAuth(requestDTO);
                     String responsePayload = String.valueOf(isAuthorized);
                     ProducerRecord<String, String> responseRecord = new ProducerRecord<>(responseTopic, responsePayload);
@@ -91,16 +91,16 @@ public class KafkaConfig {
         return new String(header.value(), StandardCharsets.UTF_8);
     }
 
-    private AuthRequestDTO parseJson(String json) {
+    private AuthRequest parseJson(String json) {
         try {
-            return objectMapper.readValue(json, AuthRequestDTO.class);
+            return objectMapper.readValue(json, AuthRequest.class);
         } catch (IOException e) {
             System.err.println("failed to parse JSON to AuthRequestDTO: " + e.getMessage());
             throw new RuntimeException("invalid JSON format for AuthRequestDTO", e);
         }
     }
     
-    public boolean checkAuth(AuthRequestDTO requestDTO) {
+    public boolean checkAuth(AuthRequest requestDTO) {
         return taskSecurityService.validateRequest(requestDTO);
     }
 }

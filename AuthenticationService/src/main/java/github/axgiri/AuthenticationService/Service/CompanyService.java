@@ -4,23 +4,22 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
-import github.axgiri.AuthenticationService.DTO.CompanyDTO;
+import github.axgiri.AuthenticationService.requests.CompanyRequest;
 import github.axgiri.AuthenticationService.Enum.PlanEnum;
 import github.axgiri.AuthenticationService.Model.Company;
 import github.axgiri.AuthenticationService.Repository.CompanyRepository;
 
+@Slf4j
 @Service
 public class CompanyService {
     
-    private static final Logger logger = LoggerFactory.getLogger(CompanyService.class);
     private final CompanyRepository repository;
 
     @Autowired
@@ -28,30 +27,29 @@ public class CompanyService {
         this.repository = repository;
     }
 
-    public List<CompanyDTO> get() {
-        logger.info("fetching all companies");
+    public List<CompanyRequest> get() {
+        log.info("fetching all companies");
         List<Company> companies = repository.findAll();
         return companies.stream()
-            .map(CompanyDTO::fromEntityToDTO)
+            .map(CompanyRequest::fromEntityToDTO)
             .collect(Collectors.toList());
     }
 
-    public CompanyDTO getById(Long id) {
-        logger.info("fetching company with id: {}", id );
-        Company company = repository.findById(id)
+    public Company getById(Long id) {
+        log.info("fetching company with id: {}", id );
+        return repository.findById(id)
             .orElseThrow(() -> new RuntimeException("comopany with id: " + id + " not found"));
-        return CompanyDTO.fromEntityToDTO(company);
     }
 
-    public CompanyDTO add(CompanyDTO companyDTO) {
-        logger.info("creating company with data: {}", companyDTO);
+    public CompanyRequest add(CompanyRequest companyDTO) {
+        log.info("creating company with data: {}", companyDTO);
         Company company = companyDTO.toEntity();
         repository.save(company);
-        return CompanyDTO.fromEntityToDTO(company);
+        return CompanyRequest.fromEntityToDTO(company);
     }
 
     public void delete(Long id) {
-        logger.info("deleting company with id: {}", id);
+        log.info("deleting company with id: {}", id);
         Company company = repository.findById(id)
             .orElseThrow(() -> new RuntimeException("company with id " + id + " not found"));
         repository.delete(company);
@@ -59,7 +57,7 @@ public class CompanyService {
 
     @Cacheable(value = "oneHourCache", key = "'isCompany_' + #id + '_Active'")
     public boolean isActive(Long id) {
-        logger.info("is active company with id: {}", id);
+        log.info("is active company with id: {}", id);
         return repository.findActiveById(id)
             .orElseThrow(() -> new RuntimeException("company with id " + id + " not found"));
     }
@@ -69,7 +67,7 @@ public class CompanyService {
             @CacheEvict(value = "isCompanyAndTokenValid", allEntries = true)
     })
     public void buy(Long id, PlanEnum plan) {
-        logger.info("buying plan for company with id: {}", id);
+        log.info("buying plan for company with id: {}", id);
         Company company = repository.findById(id)
             .orElseThrow(() -> new RuntimeException("company with id " + id + " not found"));
 

@@ -1,13 +1,14 @@
 package github.axgiri.AuthenticationService.Service;
 
+import github.axgiri.AuthenticationService.Model.Company;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import github.axgiri.AuthenticationService.DTO.CompanyDTO;
-import github.axgiri.AuthenticationService.DTO.InvitationDTO;
-import github.axgiri.AuthenticationService.DTO.UserDTO;
+import github.axgiri.AuthenticationService.requests.CompanyRequest;
+import github.axgiri.AuthenticationService.requests.InvitationRequest;
+import github.axgiri.AuthenticationService.requests.UserRequest;
 import github.axgiri.AuthenticationService.Enum.RoleEnum;
 import github.axgiri.AuthenticationService.Security.TokenService;
 
@@ -29,20 +30,20 @@ public class UserCompanyService {
 
     public String createInvitationLink(Long companyId, int validityDays) {
         logger.info("creating invitation link for company: {}", companyId);
-        CompanyDTO companyDTO = companyService.getById(companyId);
-        InvitationDTO invitationDTO = invitationService.create(companyDTO, validityDays);
+        Company company = companyService.getById(companyId);
+        InvitationRequest invitationDTO = invitationService.create(company, validityDays);
         return invitationDTO.getCode();
     }
 
-    public UserDTO addUserToCompanyByLink(String code, String token) {
+    public UserRequest addUserToCompanyByLink(String code, String token) {
         logger.info("adding user to company with data: {}");
         Boolean isValidCode = invitationService.validate(code);
         if (isValidCode == false) {
             throw(new RuntimeException("invalid link or company"));
         }
-        InvitationDTO invitationDTO = invitationService.getByCode(code);
+        InvitationRequest invitationDTO = invitationService.getByCode(code);
         String email = tokenService.extractUsername(token);
-        UserDTO userDTO = userService.getByEmail(email);
+        UserRequest userDTO = userService.getByEmail(email);
         userDTO.setCompanyId(invitationDTO.getCompanyId());
         userService.update(userDTO, userDTO.getId());
         invitationService.delete(invitationDTO);
@@ -53,7 +54,7 @@ public class UserCompanyService {
     public Boolean validate(String token) {
         userService.validateToken(token);
         String email = tokenService.extractUsername(token);
-        UserDTO userDTO = userService.getByEmail(email);
+        UserRequest userDTO = userService.getByEmail(email);
         if (companyService.isActive(userDTO.getCompanyId()) == true) {
             return true;
         } else {
@@ -61,14 +62,16 @@ public class UserCompanyService {
         }
     }
 
-    public CompanyDTO createCompanyAddAdmin(CompanyDTO companyDTO, String token) {
+    public CompanyRequest createCompanyAddAdmin(CompanyRequest companyDTO, String token) {
+
         logger.info("creating company with data: {}", companyDTO);
         String email = tokenService.extractUsername(token);
-        UserDTO userDTO = userService.getByEmail(email);
-        CompanyDTO company = companyService.add(companyDTO);
+        UserRequest userDTO = userService.getByEmail(email);
+        CompanyRequest company = companyService.add(companyDTO);
         userDTO.setCompanyId(company.getId());
         userDTO.setRole(RoleEnum.ADMIN);
         userService.update(userDTO, userDTO.getId());
+
         return company;
     }    
 }

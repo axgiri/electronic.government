@@ -2,7 +2,7 @@ package github.axgiri.AuthenticationService.Factory;
 
 import com.github.javafaker.Faker;
 
-import github.axgiri.AuthenticationService.DTO.UserDTO;
+import github.axgiri.AuthenticationService.requests.UserRequest;
 import github.axgiri.AuthenticationService.Enum.RoleEnum;
 import github.axgiri.AuthenticationService.Model.User;
 
@@ -22,12 +22,12 @@ public class UserFactory {
         return user;
     }
 
-    public static UserDTO createDTO() {
+    public static UserRequest createDTO() {
         User user = create();
-        return UserDTO.fromEntityToDTO(user);
+        return UserRequest.fromEntityToDTO(user);
     }
 
-    public static UserDTO createDTOFromEntity(User user) {
-        return UserDTO.fromEntityToDTO(user);
+    public static UserRequest createDTOFromEntity(User user) {
+        return UserRequest.fromEntityToDTO(user);
     }
 }

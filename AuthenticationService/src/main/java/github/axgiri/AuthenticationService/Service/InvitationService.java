@@ -4,12 +4,13 @@ import java.time.LocalDate;
 import java.time.chrono.ChronoLocalDate;
 import java.util.UUID;
 
+import github.axgiri.AuthenticationService.Model.Company;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import github.axgiri.AuthenticationService.DTO.CompanyDTO;
-import github.axgiri.AuthenticationService.DTO.InvitationDTO;
+import github.axgiri.AuthenticationService.requests.CompanyRequest;
+import github.axgiri.AuthenticationService.requests.InvitationRequest;
 import github.axgiri.AuthenticationService.Model.Invitation;
 import github.axgiri.AuthenticationService.Repository.InvitationRepository;
 
@@ -23,19 +24,20 @@ public class InvitationService {
         this.invitationRepository = invitationRepository;
     }
 
-    public InvitationDTO create(CompanyDTO companyDTO, int validityDays) {
-        logger.info("creating invitation for company: {}", companyDTO);
-        Invitation invitation = new Invitation();
-        invitation.setCode(UUID.randomUUID().toString());
-        invitation.setCompany(companyDTO.toEntity());
-        invitation.setCreatedAt(LocalDate.now());
-        invitation.setExpiresAt(LocalDate.now().plusDays(validityDays));
-        return InvitationDTO.fromEntityToDTO(invitationRepository.save(invitation));
+    public InvitationRequest create(Company company, int validityDays) {
+        logger.info("creating invitation for company: {}", company);
+        Invitation invitation = new Invitation()
+            .setCode(UUID.randomUUID().toString())
+            .setCompany(company)
+            .setCreatedAt(LocalDate.now())
+            .setExpiresAt(LocalDate.now().plusDays(validityDays));
+
+        return InvitationRequest.fromEntityToDTO(invitationRepository.save(invitation));
     }
 
     public Boolean validate(String code) {
         logger.info("validating invitation code: {}", code);
-        InvitationDTO invitationDTO = getByCode(code);
+        InvitationRequest invitationDTO = getByCode(code);
         ChronoLocalDate now = LocalDate.now();
         if (invitationDTO.getExpiresAt().isAfter(now) || invitationDTO.getExpiresAt().isEqual(now)) {
             return true;
@@ -44,14 +46,14 @@ public class InvitationService {
         }
     }
 
-    public InvitationDTO getByCode(String code) {
+    public InvitationRequest getByCode(String code) {
         logger.info("getting invitation by code: {}", code);
         Invitation invitation = invitationRepository.findByCode(code)
             .orElseThrow(() -> new IllegalArgumentException("invalid or expired invitation code"));
-        return InvitationDTO.fromEntityToDTO(invitation);
+        return InvitationRequest.fromEntityToDTO(invitation);
     }
 
-    public void delete(InvitationDTO invitationDTO) {
+    public void delete(InvitationRequest invitationDTO) {
         invitationRepository.deleteById(invitationDTO.getId());
     }
 }

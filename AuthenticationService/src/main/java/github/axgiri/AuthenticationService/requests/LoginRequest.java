@@ -1,4 +1,4 @@
-package github.axgiri.AuthenticationService.DTO;
+package github.axgiri.AuthenticationService.requests;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

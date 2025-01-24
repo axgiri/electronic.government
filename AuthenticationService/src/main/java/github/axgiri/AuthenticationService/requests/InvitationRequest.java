@@ -1,4 +1,4 @@
-package github.axgiri.AuthenticationService.DTO;
+package github.axgiri.AuthenticationService.requests;
 
 import java.time.LocalDate;
 
@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class InvitationDTO {
+public class InvitationRequest {
 
     private Long id;
 
@@ -39,8 +39,8 @@ public class InvitationDTO {
         return invitation;
     }
 
-    public static InvitationDTO fromEntityToDTO(Invitation invitation) {
-        return new InvitationDTO(
+    public static InvitationRequest fromEntityToDTO(Invitation invitation) {
+        return new InvitationRequest(
             invitation.getId(),
             invitation.getCode(),
             invitation.getCompany() != null ? invitation.getCompany().getId() : null,

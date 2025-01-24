@@ -2,7 +2,7 @@ package github.axgiri.AuthenticationService.Factory;
 
 import com.github.javafaker.Faker;
 
-import github.axgiri.AuthenticationService.DTO.CompanyDTO;
+import github.axgiri.AuthenticationService.requests.CompanyRequest;
 import github.axgiri.AuthenticationService.Model.Company;
 
 public class CompanyFactory {
@@ -19,12 +19,12 @@ public class CompanyFactory {
         return company;
     }
 
-    public static CompanyDTO createDTO() {
+    public static CompanyRequest createDTO() {
         Company company = create();
-        return CompanyDTO.fromEntityToDTO(company);
+        return CompanyRequest.fromEntityToDTO(company);
     }
 
-    public static CompanyDTO createDTOFromEntity(Company company) {
-        return CompanyDTO.fromEntityToDTO(company);
+    public static CompanyRequest createDTOFromEntity(Company company) {
+        return CompanyRequest.fromEntityToDTO(company);
     }
 }

@@ -2,7 +2,7 @@ package github.axgiri.AuthenticationService.Security;
 
 import org.springframework.stereotype.Service;
 
-import github.axgiri.AuthenticationService.DTO.AuthRequestDTO;
+import github.axgiri.AuthenticationService.requests.AuthRequest;
 import github.axgiri.AuthenticationService.Service.GatewayService;
 
 @Service
@@ -14,7 +14,7 @@ public class TaskSecurityService {
         this.gatewayService = gatewayService;
     }
 
-    public boolean validateRequest(AuthRequestDTO requestDTO) {
+    public boolean validateRequest(AuthRequest requestDTO) {
         switch (requestDTO.getRouteRole()) {
             case "user":
                 return gatewayService.checkTokenAndCompany(requestDTO.getToken())

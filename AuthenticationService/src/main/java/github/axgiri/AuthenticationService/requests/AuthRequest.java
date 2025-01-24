@@ -1,9 +1,9 @@
-package github.axgiri.AuthenticationService.DTO;
+package github.axgiri.AuthenticationService.requests;
 
 import lombok.Data;
 
 @Data
-public class AuthRequestDTO {
+public class AuthRequest {
     private String token;
     private Long companyId;
     private Long createdBy;

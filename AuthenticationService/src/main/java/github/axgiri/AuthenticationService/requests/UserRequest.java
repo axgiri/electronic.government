@@ -1,4 +1,4 @@
-package github.axgiri.AuthenticationService.DTO;
+package github.axgiri.AuthenticationService.requests;
 
 import github.axgiri.AuthenticationService.Enum.RoleEnum;
 import github.axgiri.AuthenticationService.Model.Company;
@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDTO {
+public class UserRequest {
 
     private Long id;
 
@@ -45,8 +45,8 @@ public class UserDTO {
         return user;
     }
 
-    public static UserDTO fromEntityToDTO(User user) {
-        return new UserDTO(
+    public static UserRequest fromEntityToDTO(User user) {
+        return new UserRequest(
             user.getId(),
             user.getEmail(),
             user.getPassword(),

@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import github.axgiri.AuthenticationService.DTO.CompanyDTO;
-import github.axgiri.AuthenticationService.DTO.UserDTO;
+import github.axgiri.AuthenticationService.requests.CompanyRequest;
+import github.axgiri.AuthenticationService.requests.UserRequest;
 import github.axgiri.AuthenticationService.Service.UserCompanyService;
 import jakarta.validation.Valid;
 
@@ -37,7 +37,7 @@ public class UserCompanyController {
     }
 
     @PostMapping("/addToCompany/{code}")
-    public ResponseEntity<UserDTO> addToCompany(@PathVariable String code, @RequestHeader("Authorization") String token) {
+    public ResponseEntity<UserRequest> addToCompany(@PathVariable String code, @RequestHeader("Authorization") String token) {
         logger.info("adding user to company with token: {}", token);
         token = token.substring(7);
         return ResponseEntity.ok(service.addUserToCompanyByLink(code, token));
@@ -52,7 +52,7 @@ public class UserCompanyController {
     }
 
     @PostMapping("/createCompany")
-    public ResponseEntity<CompanyDTO> create(@RequestBody @Valid CompanyDTO companyDTO, @RequestHeader("Authorization") String token) {
+    public ResponseEntity<CompanyRequest> create(@RequestBody @Valid CompanyRequest companyDTO, @RequestHeader("Authorization") String token) {
         logger.info("creating company with data: {}", companyDTO);
         token = token.substring(7);
         return ResponseEntity.ok(service.createCompanyAddAdmin(companyDTO, token));
