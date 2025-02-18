@@ -13,7 +13,6 @@ import static org.mockito.Mockito.when;
 
 import java.util.UUID;
 
-import github.axgiri.AuthenticationService.Model.Company;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -22,13 +21,17 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.github.javafaker.Faker;
 
-import github.axgiri.AuthenticationService.requests.CompanyRequest;
-import github.axgiri.AuthenticationService.requests.InvitationRequest;
-import github.axgiri.AuthenticationService.requests.UserRequest;
+import github.axgiri.AuthenticationService.security.TokenService;
+import github.axgiri.AuthenticationService.service.CompanyService;
+import github.axgiri.AuthenticationService.service.InvitationService;
+import github.axgiri.AuthenticationService.service.UserCompanyService;
+import github.axgiri.AuthenticationService.service.UserService;
 import github.axgiri.AuthenticationService.Factory.CompanyFactory;
 import github.axgiri.AuthenticationService.Factory.InvitationFactory;
 import github.axgiri.AuthenticationService.Factory.UserFactory;
-import github.axgiri.AuthenticationService.Security.TokenService;
+import github.axgiri.AuthenticationService.model.Company;
+import github.axgiri.AuthenticationService.model.Invitation;
+import github.axgiri.AuthenticationService.model.User;
 
 @ExtendWith(MockitoExtension.class)
 public class UserCompanyServiceTest {
@@ -54,11 +57,11 @@ public class UserCompanyServiceTest {
     public void createInvitationLinkTest() {
         Company company = CompanyFactory.create();
         int validityDays = faker.number().numberBetween(1, 30);
-        InvitationRequest invitationDTO = InvitationFactory.createDTO(company, validityDays);
+        Invitation invitation = InvitationFactory.create(company, validityDays);
         when(companyService.getById(company.getId())).thenReturn(company);
-        when(invitationService.create(company, validityDays)).thenReturn(invitationDTO);
+        when(invitationService.create(company, validityDays)).thenReturn(invitation);
         String result = service.createInvitationLink(company.getId(), validityDays);
-        assertEquals(invitationDTO.getCode(), result);
+        assertEquals(invitation.getCode(), result);
         verify(companyService, times(1)).getById(company.getId());
         verify(invitationService, times(1)).create(company, validityDays);
     }
@@ -83,22 +86,22 @@ public class UserCompanyServiceTest {
         Company company = CompanyFactory.create();
         String token = faker.name().toString();
         String code = UUID.randomUUID().toString();
-        InvitationRequest invitationDTO = InvitationFactory.createDTO(company, faker.number().numberBetween(1, 30));
-        UserRequest userDTO = UserFactory.createDTO();
+        Invitation invitation = InvitationFactory.create(company, faker.number().numberBetween(1, 30));
+        User user = UserFactory.create();
         when(invitationService.validate(code)).thenReturn(true);
-        when(invitationService.getByCode(code)).thenReturn(invitationDTO);
-        when(tokenService.extractUsername(token)).thenReturn(userDTO.getEmail());
-        when(userService.getByEmail(userDTO.getEmail())).thenReturn(userDTO);
-        when(userService.update(userDTO, userDTO.getId())).thenReturn(userDTO);
-        UserRequest result = service.addUserToCompanyByLink(code, token);
-        assertEquals(userDTO, result);
-        assertEquals(invitationDTO.getCompanyId(), userDTO.getCompanyId());
+        when(invitationService.getByCode(code)).thenReturn(invitation);
+        when(tokenService.extractUsername(token)).thenReturn(user.getEmail());
+        when(userService.getByEmail(user.getEmail())).thenReturn(user);
+        when(userService.update(user, user.getId())).thenReturn(user);
+        User result = service.addUserToCompanyByLink(code, token);
+        assertEquals(user, result);
+        assertEquals(invitation.getCompany(), user.getCompany());
         verify(invitationService, times(1)).validate(code);
         verify(invitationService, times(1)).getByCode(code);
         verify(tokenService, times(1)).extractUsername(token);
-        verify(userService, times(1)).getByEmail(userDTO.getEmail());
-        verify(userService, times(1)).update(userDTO, userDTO.getId());
-        verify(invitationService, times(1)).delete(invitationDTO);
+        verify(userService, times(1)).getByEmail(user.getEmail());
+        verify(userService, times(1)).update(user, user.getId());
+        verify(invitationService, times(1)).delete(invitation);
     }
 
     @Test

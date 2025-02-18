@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import github.axgiri.AuthenticationService.Enum.PlanEnum;
-import github.axgiri.AuthenticationService.Model.Company;
+import github.axgiri.AuthenticationService.model.Company;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -31,14 +31,5 @@ public class CompanyRequest {
             .setPlan(this.plan)
             .setSubscriptionExpiration(this.subscriptionExpiration)
             .setActive(this.active);
-    }
-
-    public static CompanyRequest fromEntityToDTO(Company company) {
-        return new CompanyRequest()
-            .setId(company.getId())
-            .setName(company.getName())
-            .setPlan(company.getPlan())
-            .setSubscriptionExpiration(company.getSubscriptionExpiration())
-            .setActive(company.isActive());
     }
 }

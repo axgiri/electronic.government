@@ -5,10 +5,8 @@ import java.util.UUID;
 
 import com.github.javafaker.Faker;
 
-import github.axgiri.AuthenticationService.Model.Company;
-import github.axgiri.AuthenticationService.requests.CompanyRequest;
-import github.axgiri.AuthenticationService.requests.InvitationRequest;
-import github.axgiri.AuthenticationService.Model.Invitation;
+import github.axgiri.AuthenticationService.model.Company;
+import github.axgiri.AuthenticationService.model.Invitation;
 
 public class InvitationFactory {
     
@@ -22,14 +20,5 @@ public class InvitationFactory {
         invitation.setCreatedAt(LocalDate.now());
         invitation.setExpiresAt(LocalDate.now().plusDays(validityDays));
         return invitation;
-    }
-
-    public static InvitationRequest createDTO(Company company, int validityDays) {
-        Invitation invitation = create(company, validityDays);
-        return InvitationRequest.fromEntityToDTO(invitation);
-    }
-
-    public static InvitationRequest createDTOFromEntity(Invitation invitation) {
-        return InvitationRequest.fromEntityToDTO(invitation);
     }
 }

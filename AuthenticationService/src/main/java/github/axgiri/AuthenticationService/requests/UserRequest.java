@@ -1,17 +1,13 @@
 package github.axgiri.AuthenticationService.requests;
 
 import github.axgiri.AuthenticationService.Enum.RoleEnum;
-import github.axgiri.AuthenticationService.Model.Company;
-import github.axgiri.AuthenticationService.Model.User;
+import github.axgiri.AuthenticationService.model.Company;
+import github.axgiri.AuthenticationService.model.User;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class UserRequest {
 
     private Long id;
@@ -34,26 +30,13 @@ public class UserRequest {
     private Long companyId;
 
     public User toEntity(Company company) {
-        User user = new User();
-        user.setId(id);
-        user.setEmail(email);
-        user.setPassword(password);
-        user.setName(name);
-        user.setSurname(surname);
-        user.setRole(role != null ? role : RoleEnum.WORKER);
-        user.setCompany(company != null ? company : null);
-        return user;
-    }
-
-    public static UserRequest fromEntityToDTO(User user) {
-        return new UserRequest(
-            user.getId(),
-            user.getEmail(),
-            user.getPassword(),
-            user.getName(),
-            user.getSurname(),
-            user.getRole(),
-            user.getCompany() != null ? user.getCompany().getId() : null
-        );
+        return new User()
+            .setId(this.id)
+            .setEmail(this.email)
+            .setPassword(this.password)
+            .setName(this.name)
+            .setSurname(this.surname)
+            .setRole(this.role != null ? role : RoleEnum.WORKER)
+            .setCompany(company != null ? company : null);
     }
 }
