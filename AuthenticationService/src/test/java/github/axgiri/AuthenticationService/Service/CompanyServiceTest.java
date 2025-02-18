@@ -19,8 +19,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import github.axgiri.AuthenticationService.Enum.PlanEnum;
 import github.axgiri.AuthenticationService.Factory.CompanyFactory;
-import github.axgiri.AuthenticationService.Model.Company;
-import github.axgiri.AuthenticationService.Repository.CompanyRepository;
+import github.axgiri.AuthenticationService.model.Company;
+import github.axgiri.AuthenticationService.repository.CompanyRepository;
+import github.axgiri.AuthenticationService.service.CompanyService;
 
 import org.junit.jupiter.api.extension.ExtendWith;
 

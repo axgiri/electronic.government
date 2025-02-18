@@ -2,8 +2,7 @@ package github.axgiri.AuthenticationService.Factory;
 
 import com.github.javafaker.Faker;
 
-import github.axgiri.AuthenticationService.DTO.CompanyDTO;
-import github.axgiri.AuthenticationService.Model.Company;
+import github.axgiri.AuthenticationService.model.Company;
 
 public class CompanyFactory {
 
@@ -17,14 +16,5 @@ public class CompanyFactory {
         company.setSubscriptionExpiration(null);
         company.setActive(false);
         return company;
-    }
-
-    public static CompanyDTO createDTO() {
-        Company company = create();
-        return CompanyDTO.fromEntityToDTO(company);
-    }
-
-    public static CompanyDTO createDTOFromEntity(Company company) {
-        return CompanyDTO.fromEntityToDTO(company);
     }
 }
